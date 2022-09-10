@@ -58,9 +58,9 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Generate .h and .c files from dbc
         run: |
-          cd $GITHUB_WORKSPACE && mkdir -p can_conv
+          mkdir -p $GITHUB_WORKSPACE/can_conv
           cd $GITHUB_WORKSPACE/../howerj/dbcc
-          ./dbcc -o $GITHUB_WORKSPACE/can_conv $GITHUB_WORKSPACE/dbc/*.dbc 
+          ./dbcc -v -o $GITHUB_WORKSPACE/can_conv $GITHUB_WORKSPACE/dbc/*.dbc 
           
       - name: Git commit / Push Changes
         uses: actions-x/commit@v6
