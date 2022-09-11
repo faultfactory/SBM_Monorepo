@@ -25,7 +25,11 @@ Amoung other things, here's what it always wants to see:
 - In the parent directory, another directory ```src``` exists that contains code that is part of the sketch but not an official or installed library.
 <br>
 
-Because the parent directory and sketch file have the aformenetioned name requirements, you can't compile multiple sketches using the same ```src``` directory. That means we have to have the CAN interface files described above available in the ```src``` directory. Instead of making copies over and over again, we leverage symbolic links which are just a fancy shortcut pointing to another location. This is why you need to have Developer Mode on. 
+Because the parent directory and sketch file have the aformenetioned name requirements, you can't compile multiple sketches using the same ```src``` directory. That means we have to have the CAN interface files described above available in the ```src``` directory. Instead of making copies over and over again, we leverage symbolic links which are just a fancy shortcut pointing to another location. This is why you need to have Developer Mode on. It's a newer feature. Additionally, specify the cmd or powershell terminal for vscode and git usage so as to not break the symlinks. 
+
+
+It gets better with some more idiocy with the VSCode Arduino plugin. When opening a folder, VScode will create the ```.vscode``` directory for certain settings. An ```arduino.json``` will be created defining some settings for the board type and including the sketch files. So if you're using VSCode for compilation and serial monitor, just open the folder with the ```.ino``` file.
+
 
 # Setup
 ``` TODO: ADD LINKS```
@@ -40,7 +44,7 @@ Because the parent directory and sketch file have the aformenetioned name requir
     - vsciot-vscode.vscode-arduino
     - ms-vscode.cpptools
     - eamodio.gitlens
-- Clone this repository
+- Clone this repository. Again use cmd or powershell. Not git bash or WSL
 
 Newbies, reach out of this is not complete enough. 
 
