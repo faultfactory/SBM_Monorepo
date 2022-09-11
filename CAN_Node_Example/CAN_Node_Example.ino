@@ -1,6 +1,3 @@
-// Copyright (c) Sandeep Mistry. All rights reserved.
-// Licensed under the MIT license. See LICENSE file in the project root for full license information.
-
 #include <CAN.h>
 #include <millisDelay.h>
 #include "src/can_conv/SBU_Motorsports_Database_2023.h"
@@ -42,6 +39,7 @@ union MsgData
 
 const uint64_t zeros = 0;
 
+millisDelay CAN_Send_Delay; 
 void setup()
 {
   pinMode(PIN_CAN_STANDBY, OUTPUT);
@@ -55,20 +53,29 @@ void setup()
   while (!Serial); // THIS STOPS YOU FROM RUNNING UNTIL YOUR USB IS PLUGGED IN!
   Serial.println("CAN Loopback Demonstration");
   // start the CAN bus at 500 kbps
-  
-  CAN.begin(500000);
-  CAN.loopback();
+    CAN.begin(500000);
 
-
+  ///////////EXAMPLE ONLY, DELETE ME FOR USE ON VEHICLE //////////
   //CAN Loopback is for validating code with a single board. Remove this for a multi-node network
-  
+  CAN.loopback();
+  ///////////EXAMPLE ONLY, DELETE ME FOR USE ON VEHICLE //////////
 
+  // creating a millsDelay object using the library <millsDelay.h>
+  // This provides non-blocking delays that don't obstruct execution
+  // like using the standard delay() function would. 
+
+  CAN_Send_Delay.start(1000); // We want to execute after every 1000 milliseconds
 }
 
 void loop()
 {
-  // Scoping this so i can re-use variables cleanly.
+  if(CAN_Send_Delay.justFinished()) // Checking the delay on each loops
   {
+    // Delay has expired so set it to run again. 
+    // This library does not allow drift and logs the actual expiration time. 
+    CAN_Send_Delay.repeat(); 
+    Serial.println(millis());
+    Serial.println("The millis() output is printed above because to demonstrate that the internal time is right, despite the serial timestamps being wrong.");
     makeRandomIMUValues();
     Serial.println("Sending the following values through CAN");
     Serial.print("Roll:" ); Serial.println(roll);
@@ -93,17 +100,14 @@ void loop()
     CAN.write(msg.b,8);
     CAN.endPacket();  
 
-
+    // After sending the message we can go ahead and encode zeros across
+    // the entire storage structure to give ourselves more confidence that
+    // the code is doing what we expect. This is not required. just a demonstration
+    // that we're not looking at our old values. 
+    encode_can_0x100_Body_Roll_deg(&can_obj,0.0f); 
+    encode_can_0x100_Body_Pitch_deg(&can_obj,0.0f);
+    encode_can_0x100_Body_Yaw_deg(&can_obj,0.0f);
   }
-
-  // After sending the message we can go ahead and encode zeros across
-  // the entire storage structure to give ourselves more confidence that
-  // the code is doing what we expect. This is not required. just a demonstration
-  // that we're not looking at our old values. 
-
-  encode_can_0x100_Body_Roll_deg(&can_obj,0.0f); 
-  encode_can_0x100_Body_Pitch_deg(&can_obj,0.0f);
-  encode_can_0x100_Body_Yaw_deg(&can_obj,0.0f);
 
   // try to parse packet
   size_t packetSize = (size_t)CAN.parsePacket();
@@ -141,9 +145,6 @@ void loop()
     Serial.print("Yaw Recieved: ");
     Serial.println(yaw_in);
     Serial.println();
-    Serial.println();
-    Serial.println();
-
   }
     
   
