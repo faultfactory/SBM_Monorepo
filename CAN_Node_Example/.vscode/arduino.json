@@ -1,0 +1,6 @@
+{
+    "configuration": "cache=on,speed=120,opt=small,maxqspi=50,usbstack=arduino,debug=off",
+    "board": "adafruit:samd:adafruit_feather_m4_can",
+    "programmer": "adafruit:adafruit_jlink",
+    "sketch": "CAN_Node_Example.ino"
+}

@@ -41,9 +41,9 @@ It gets better with some more idiocy with the VSCode Arduino plugin. When openin
     - Verify you can connect to the board and see output on the Serial Monitor.
 - Install the CAN library for the Feather M4 CAN. It is titled ```CAN Adafruit Fork```.
 - Optional: Install VSCode with reccomended packages:
-    - vsciot-vscode.vscode-arduino
-    - ms-vscode.cpptools
-    - eamodio.gitlens
+    - ```vsciot-vscode.vscode-arduino```
+    - ```ms-vscode.cpptools```
+    - ```eamodio.gitlens```
 - Clone this repository. Again use cmd or powershell. Not git bash or WSL
 
 Newbies, reach out of this is not complete enough. 
@@ -54,5 +54,7 @@ Newbies, reach out of this is not complete enough.
 2. When you're ready to create a new node, make a copy of that directory to the root of the repo. This will copy the required symbolic link as well.
 3. Due to the sensitivity of the symbolic links in windows, make sure you're using git from cmd or powershell (i.e. Not git bash or WSL).
 
+# Future Work 
 
+Since the .dbc is stored here, data conversion tools should be alongside it to reference it.
 
