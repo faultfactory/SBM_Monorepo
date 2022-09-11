@@ -22,6 +22,10 @@ Commit early and often
 Use pull requests to get buy-in from the team and document discussions.
 Ask for help on slack if you need it.
 
+## Github
+I think it's worth noting that Github is just a company hosting git remote servers. They don't own the sw package ```git```. The value they do provide is in establishing some security gates, allowing code reviews via pull requests and a platform for hashing out discussions on code changes. A new feature they've rolled out is Github Actions which provides a basic form of [CI/CD](#cicd---continuous-integration--continuous-deployment).
+
+
 ## Mono-Repo
 
 Just like it sounds: ```ONE REPO```. A mono-repo is a concept used to help align SW dependencies between various components in a project. Git has means of sharing code between repositories (```submodules```) but they are cumbersome and a bit much for SW newbies. <BR>
@@ -30,7 +34,9 @@ Using a mono-repo structure removes any issues caused by different versions bein
 
 ## CI/CD - Continuous Integration / Continuous Deployment
 
-This is a big fancy word for "I automatically run tasks on someone else's computer". In the context of CI/CD typically that means building, testing, deploying, releasing etc. Github provides some basic functionality for this via Github Actions which we use for automating the CAN .c and .h files. In the future, we can establish a pipeline to automatically build the sketch files in the cloud to make sure nothing was broken by any single commit.
+This is a big fancy word for "I automatically run tasks on someone else's computer". In the context of CI/CD typically that means building, testing, deploying, releasing etc. Github provides some basic functionality for this via Github Actions which we use for automating the creation of CAN .c and .h files. This removes managing a tool and process from your head. Just commit and push. 
 
-BTW Github is just a company hosting git remote servers. They don't own the sw package ```git```. 
+In the future, we can establish a pipeline to automatically build the sketch files in the cloud to make sure nothing was broken by someone's work.
+
+
 
