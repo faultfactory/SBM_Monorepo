@@ -41,7 +41,7 @@ BO_ 257 GPS: 8 Body_Orientation
 
 BO_ 256 IMU: 8 Body_Orientation
  SG_ Body_Yaw_deg : 32|16@1+ (0.1,0) [0|359] "deg"  Display_Screen
- SG_ Body_Pitch_deg_test2 : 16|16@1+ (0.1,0) [0|359] "deg"  Display_Screen
+ SG_ Body_Pitch_deg : 16|16@1+ (0.1,0) [0|359] "deg"  Display_Screen
  SG_ Body_Roll_deg : 0|16@1+ (0.1,0) [0|359] "deg"  Display_Screen
 
 
@@ -54,7 +54,7 @@ CM_ SG_ 256 Body_Yaw_deg "Yaw angle of the vehicle body in degrees
 Output is an integer to save space
 
 Resolution of 0.1 degrees";
-CM_ SG_ 256 Body_Pitch_deg_test2 "Pitch angle of the vehicle body in degrees
+CM_ SG_ 256 Body_Pitch_deg "Pitch angle of the vehicle body in degrees
 
 Output is an integer to save space
 
