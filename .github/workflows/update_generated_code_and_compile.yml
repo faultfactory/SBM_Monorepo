@@ -67,7 +67,8 @@ jobs:
           files: can_conv/*
  auto_compile_all_sketches:
     runs-on: ubuntu-latest
-    needs: [ generate_c_interface]
+    if: ${{ always() }}
+    needs: [conditional_job_check_dbc, generate_c_interface]
     steps:
       - name: Path lister action
         uses: Rishabh510/Path-lister-action@1.0
