@@ -24,8 +24,8 @@ static int pack_can_0x100_IMU(can_obj_sbu_motorsports_database_2023_h_t *o, uint
 	/* Body_Roll_deg: start-bit 0, length 16, endianess intel, scaling 0.1, offset 0 */
 	x = ((uint16_t)(o->can_0x100_IMU.Body_Roll_deg)) & 0xffff;
 	i |= x;
-	/* Body_Pitch_deg_test1: start-bit 16, length 16, endianess intel, scaling 0.1, offset 0 */
-	x = ((uint16_t)(o->can_0x100_IMU.Body_Pitch_deg_test1)) & 0xffff;
+	/* Body_Pitch_deg_test2: start-bit 16, length 16, endianess intel, scaling 0.1, offset 0 */
+	x = ((uint16_t)(o->can_0x100_IMU.Body_Pitch_deg_test2)) & 0xffff;
 	x <<= 16; 
 	i |= x;
 	/* Body_Yaw_deg: start-bit 32, length 16, endianess intel, scaling 0.1, offset 0 */
@@ -47,9 +47,9 @@ static int unpack_can_0x100_IMU(can_obj_sbu_motorsports_database_2023_h_t *o, ui
 	/* Body_Roll_deg: start-bit 0, length 16, endianess intel, scaling 0.1, offset 0 */
 	x = i & 0xffff;
 	o->can_0x100_IMU.Body_Roll_deg = x;
-	/* Body_Pitch_deg_test1: start-bit 16, length 16, endianess intel, scaling 0.1, offset 0 */
+	/* Body_Pitch_deg_test2: start-bit 16, length 16, endianess intel, scaling 0.1, offset 0 */
 	x = (i >> 16) & 0xffff;
-	o->can_0x100_IMU.Body_Pitch_deg_test1 = x;
+	o->can_0x100_IMU.Body_Pitch_deg_test2 = x;
 	/* Body_Yaw_deg: start-bit 32, length 16, endianess intel, scaling 0.1, offset 0 */
 	x = (i >> 32) & 0xffff;
 	o->can_0x100_IMU.Body_Yaw_deg = x;
@@ -82,10 +82,10 @@ int encode_can_0x100_Body_Roll_deg(can_obj_sbu_motorsports_database_2023_h_t *o,
 	return 0;
 }
 
-int decode_can_0x100_Body_Pitch_deg_test1(const can_obj_sbu_motorsports_database_2023_h_t *o, double *out) {
+int decode_can_0x100_Body_Pitch_deg_test2(const can_obj_sbu_motorsports_database_2023_h_t *o, double *out) {
 	assert(o);
 	assert(out);
-	double rval = (double)(o->can_0x100_IMU.Body_Pitch_deg_test1);
+	double rval = (double)(o->can_0x100_IMU.Body_Pitch_deg_test2);
 	rval *= 0.1;
 	if (rval <= 359) {
 		*out = rval;
@@ -96,13 +96,13 @@ int decode_can_0x100_Body_Pitch_deg_test1(const can_obj_sbu_motorsports_database
 	}
 }
 
-int encode_can_0x100_Body_Pitch_deg_test1(can_obj_sbu_motorsports_database_2023_h_t *o, double in) {
+int encode_can_0x100_Body_Pitch_deg_test2(can_obj_sbu_motorsports_database_2023_h_t *o, double in) {
 	assert(o);
-	o->can_0x100_IMU.Body_Pitch_deg_test1 = 0;
+	o->can_0x100_IMU.Body_Pitch_deg_test2 = 0;
 	if (in > 359)
 		return -1;
 	in *= 10;
-	o->can_0x100_IMU.Body_Pitch_deg_test1 = in;
+	o->can_0x100_IMU.Body_Pitch_deg_test2 = in;
 	return 0;
 }
 
@@ -135,7 +135,7 @@ int print_can_0x100_IMU(const can_obj_sbu_motorsports_database_2023_h_t *o, FILE
 	assert(output);
 	int r = 0;
 	r = print_helper(r, fprintf(output, "Body_Roll_deg = (wire: %.0f)\n", (double)(o->can_0x100_IMU.Body_Roll_deg)));
-	r = print_helper(r, fprintf(output, "Body_Pitch_deg_test1 = (wire: %.0f)\n", (double)(o->can_0x100_IMU.Body_Pitch_deg_test1)));
+	r = print_helper(r, fprintf(output, "Body_Pitch_deg_test2 = (wire: %.0f)\n", (double)(o->can_0x100_IMU.Body_Pitch_deg_test2)));
 	r = print_helper(r, fprintf(output, "Body_Yaw_deg = (wire: %.0f)\n", (double)(o->can_0x100_IMU.Body_Yaw_deg)));
 	return r;
 }
