@@ -33,13 +33,13 @@ typedef enum {
 #endif
 
 typedef PREPACK struct {
-	/* Body_Roll_deg_test: Roll angle of the vehicle body in degrees
+	/* Body_Roll_deg: Roll angle of the vehicle body in degrees
 
 Output is an integer to save space
 
 Resolution of 0.1 degrees */
 	/* scaling 0.1, offset 0.0, units deg  */
-	uint16_t Body_Roll_deg_test;
+	uint16_t Body_Roll_deg;
 	/* Body_Pitch_deg: Pitch angle of the vehicle body in degrees
 
 Output is an integer to save space
@@ -81,8 +81,8 @@ int unpack_message(can_obj_sbu_motorsports_database_2023_h_t *o, const unsigned 
 int pack_message(can_obj_sbu_motorsports_database_2023_h_t *o, const unsigned long id, uint64_t *data);
 int print_message(const can_obj_sbu_motorsports_database_2023_h_t *o, const unsigned long id, FILE *output);
 
-int decode_can_0x100_Body_Roll_deg_test(const can_obj_sbu_motorsports_database_2023_h_t *o, double *out);
-int encode_can_0x100_Body_Roll_deg_test(can_obj_sbu_motorsports_database_2023_h_t *o, double in);
+int decode_can_0x100_Body_Roll_deg(const can_obj_sbu_motorsports_database_2023_h_t *o, double *out);
+int encode_can_0x100_Body_Roll_deg(can_obj_sbu_motorsports_database_2023_h_t *o, double in);
 int decode_can_0x100_Body_Pitch_deg(const can_obj_sbu_motorsports_database_2023_h_t *o, double *out);
 int encode_can_0x100_Body_Pitch_deg(can_obj_sbu_motorsports_database_2023_h_t *o, double in);
 int decode_can_0x100_Body_Yaw_deg(const can_obj_sbu_motorsports_database_2023_h_t *o, double *out);
