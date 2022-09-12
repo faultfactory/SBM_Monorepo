@@ -45,8 +45,8 @@ jobs:
         uses: arduino/compile-sketches@v1
         with:
           platforms:  |
-            - name: 'adafruit:samd'
             - source-url: 'https://adafruit.github.io/arduino-board-index/package_adafruit_index.json'
+            - name: 'adafruit:samd'
           fqbn: 'adafruit:samd:adafruit_feather_m4_can'
           libraries: |
             - name: CAN Adafruit Fork
