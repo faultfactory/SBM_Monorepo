@@ -37,7 +37,7 @@ BU_: Display_Screen Body_Orientation
 
 
 BO_ 257 GPS: 8 Body_Orientation
- SG_ Body_Speed_mps : 0|8@1+ (0.1,0) [0|25.5] "m/s"  Display_Screen
+ SG_ Body_Speed_mps_test : 0|8@1+ (0.1,0) [0|25.5] "m/s"  Display_Screen
 
 BO_ 256 IMU: 8 Body_Orientation
  SG_ Body_Yaw_deg : 32|16@1+ (0.1,0) [0|359] "deg"  Display_Screen
@@ -46,7 +46,7 @@ BO_ 256 IMU: 8 Body_Orientation
 
 
 
-CM_ SG_ 257 Body_Speed_mps "Velocity of the vehicle body in m/s
+CM_ SG_ 257 Body_Speed_mps_test "Velocity of the vehicle body in m/s
 
 Resolution of 0.1 m/s (0.224 mph)";
 CM_ SG_ 256 Body_Yaw_deg "Yaw angle of the vehicle body in degrees
