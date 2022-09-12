@@ -69,8 +69,7 @@ jobs:
           files: can_conv/*
       - name: pass_new_commit_sha
         run: |
-          $NewSHA = git rev-parse HEAD
-          Write-Host "::set-output name=auto_commit_sha::$NewSHA"
+          echo ::set-output name=auto_commit_sha::$(git rev-parse HEAD)
  auto_compile_all_sketches:
     runs-on: ubuntu-latest
     if: ${{ always() }}
