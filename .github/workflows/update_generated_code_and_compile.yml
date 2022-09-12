@@ -77,10 +77,11 @@ jobs:
     needs: [conditional_job_check_dbc, generate_c_interface]
     steps:
       - uses: actions/checkout@v3
-      if: needs.conditional_job_check_dbc.outputs.dbc_changed == 'True'
+      - name: conditional checkout
+        if: needs.conditional_job_check_dbc.outputs.dbc_changed == 'True'
         uses: actions/checkout@v3
-          with: 
-            ref: ${{ needs.generate_c_interface.auto_commit_sha }}
+        with: 
+          ref: ${{ needs.generate_c_interface.auto_commit_sha }}
       - name: Path lister action
         uses: Rishabh510/Path-lister-action@1.0
         id: pl
