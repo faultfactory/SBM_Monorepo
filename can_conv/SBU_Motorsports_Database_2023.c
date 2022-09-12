@@ -145,8 +145,8 @@ static int pack_can_0x101_GPS(can_obj_sbu_motorsports_database_2023_h_t *o, uint
 	assert(data);
 	register uint64_t x;
 	register uint64_t i = 0;
-	/* Body_Speed_mps: start-bit 0, length 8, endianess intel, scaling 0.1, offset 0 */
-	x = ((uint8_t)(o->can_0x101_GPS.Body_Speed_mps)) & 0xff;
+	/* Body_Speed_mps_test: start-bit 0, length 8, endianess intel, scaling 0.1, offset 0 */
+	x = ((uint8_t)(o->can_0x101_GPS.Body_Speed_mps_test)) & 0xff;
 	i |= x;
 	*data = (i);
 	o->can_0x101_GPS_tx = 1;
@@ -160,18 +160,18 @@ static int unpack_can_0x101_GPS(can_obj_sbu_motorsports_database_2023_h_t *o, ui
 	register uint64_t i = (data);
 	if (dlc < 8)
 		return -1;
-	/* Body_Speed_mps: start-bit 0, length 8, endianess intel, scaling 0.1, offset 0 */
+	/* Body_Speed_mps_test: start-bit 0, length 8, endianess intel, scaling 0.1, offset 0 */
 	x = i & 0xff;
-	o->can_0x101_GPS.Body_Speed_mps = x;
+	o->can_0x101_GPS.Body_Speed_mps_test = x;
 	o->can_0x101_GPS_rx = 1;
 	o->can_0x101_GPS_time_stamp_rx = time_stamp;
 	return 0;
 }
 
-int decode_can_0x101_Body_Speed_mps(const can_obj_sbu_motorsports_database_2023_h_t *o, double *out) {
+int decode_can_0x101_Body_Speed_mps_test(const can_obj_sbu_motorsports_database_2023_h_t *o, double *out) {
 	assert(o);
 	assert(out);
-	double rval = (double)(o->can_0x101_GPS.Body_Speed_mps);
+	double rval = (double)(o->can_0x101_GPS.Body_Speed_mps_test);
 	rval *= 0.1;
 	if (rval <= 25.5) {
 		*out = rval;
@@ -182,13 +182,13 @@ int decode_can_0x101_Body_Speed_mps(const can_obj_sbu_motorsports_database_2023_
 	}
 }
 
-int encode_can_0x101_Body_Speed_mps(can_obj_sbu_motorsports_database_2023_h_t *o, double in) {
+int encode_can_0x101_Body_Speed_mps_test(can_obj_sbu_motorsports_database_2023_h_t *o, double in) {
 	assert(o);
-	o->can_0x101_GPS.Body_Speed_mps = 0;
+	o->can_0x101_GPS.Body_Speed_mps_test = 0;
 	if (in > 25.5)
 		return -1;
 	in *= 10;
-	o->can_0x101_GPS.Body_Speed_mps = in;
+	o->can_0x101_GPS.Body_Speed_mps_test = in;
 	return 0;
 }
 
@@ -196,7 +196,7 @@ int print_can_0x101_GPS(const can_obj_sbu_motorsports_database_2023_h_t *o, FILE
 	assert(o);
 	assert(output);
 	int r = 0;
-	r = print_helper(r, fprintf(output, "Body_Speed_mps = (wire: %.0f)\n", (double)(o->can_0x101_GPS.Body_Speed_mps)));
+	r = print_helper(r, fprintf(output, "Body_Speed_mps_test = (wire: %.0f)\n", (double)(o->can_0x101_GPS.Body_Speed_mps_test)));
 	return r;
 }
 
