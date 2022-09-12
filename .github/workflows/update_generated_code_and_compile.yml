@@ -43,6 +43,8 @@ jobs:
     needs: [ conditional_job_check_dbc ]
     if: needs.conditional_job_check_dbc.outputs.dbc_changed == 'True'
     # Steps represent a sequence of tasks that will be executed as part of the job
+    outputs:
+      auto_commit_sha: ${{ steps.pass_new_commit_sha.outputs.auto_commit_sha }}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -65,11 +67,21 @@ jobs:
         with:
           message: "Automated CAN interface file update"
           files: can_conv/*
+      - name: pass_new_commit_sha
+        run: |
+          $NewSHA = git rev-parse HEAD
+          Write-Host "::set-output name=auto_commit_sha::$NewSHA"
  auto_compile_all_sketches:
     runs-on: ubuntu-latest
     if: ${{ always() }}
     needs: [conditional_job_check_dbc, generate_c_interface]
     steps:
+      if: needs.conditional_job_check_dbc.outputs.dbc_changed == 'False'
+        uses: actions/checkout@v3
+      if: needs.conditional_job_check_dbc.outputs.dbc_changed == 'True'
+        uses: actions/checkout@v3
+        with: 
+          ref: ${{ needs.generate_c_interface.auto_commit_sha }}
       - name: Path lister action
         uses: Rishabh510/Path-lister-action@1.0
         id: pl
