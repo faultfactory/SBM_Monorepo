@@ -33,13 +33,13 @@ typedef enum {
 #endif
 
 typedef PREPACK struct {
-	/* Body_Roll_deg: Roll angle of the vehicle body in degrees
+	/* Body_Roll_deg_test: Roll angle of the vehicle body in degrees
 
 Output is an integer to save space
 
 Resolution of 0.1 degrees */
 	/* scaling 0.1, offset 0.0, units deg  */
-	uint16_t Body_Roll_deg;
+	uint16_t Body_Roll_deg_test;
 	/* Body_Pitch_deg: Pitch angle of the vehicle body in degrees
 
 Output is an integer to save space
@@ -57,11 +57,11 @@ Resolution of 0.1 degrees */
 } POSTPACK can_0x100_IMU_t;
 
 typedef PREPACK struct {
-	/* Body_Speed_mps_test: Velocity of the vehicle body in m/s
+	/* Body_Speed_mps: Velocity of the vehicle body in m/s
 
 Resolution of 0.1 m/s (0.224 mph) */
 	/* scaling 0.1, offset 0.0, units m/s  */
-	uint8_t Body_Speed_mps_test;
+	uint8_t Body_Speed_mps;
 } POSTPACK can_0x101_GPS_t;
 
 typedef PREPACK struct {
@@ -81,16 +81,16 @@ int unpack_message(can_obj_sbu_motorsports_database_2023_h_t *o, const unsigned 
 int pack_message(can_obj_sbu_motorsports_database_2023_h_t *o, const unsigned long id, uint64_t *data);
 int print_message(const can_obj_sbu_motorsports_database_2023_h_t *o, const unsigned long id, FILE *output);
 
-int decode_can_0x100_Body_Roll_deg(const can_obj_sbu_motorsports_database_2023_h_t *o, double *out);
-int encode_can_0x100_Body_Roll_deg(can_obj_sbu_motorsports_database_2023_h_t *o, double in);
+int decode_can_0x100_Body_Roll_deg_test(const can_obj_sbu_motorsports_database_2023_h_t *o, double *out);
+int encode_can_0x100_Body_Roll_deg_test(can_obj_sbu_motorsports_database_2023_h_t *o, double in);
 int decode_can_0x100_Body_Pitch_deg(const can_obj_sbu_motorsports_database_2023_h_t *o, double *out);
 int encode_can_0x100_Body_Pitch_deg(can_obj_sbu_motorsports_database_2023_h_t *o, double in);
 int decode_can_0x100_Body_Yaw_deg(const can_obj_sbu_motorsports_database_2023_h_t *o, double *out);
 int encode_can_0x100_Body_Yaw_deg(can_obj_sbu_motorsports_database_2023_h_t *o, double in);
 
 
-int decode_can_0x101_Body_Speed_mps_test(const can_obj_sbu_motorsports_database_2023_h_t *o, double *out);
-int encode_can_0x101_Body_Speed_mps_test(can_obj_sbu_motorsports_database_2023_h_t *o, double in);
+int decode_can_0x101_Body_Speed_mps(const can_obj_sbu_motorsports_database_2023_h_t *o, double *out);
+int encode_can_0x101_Body_Speed_mps(can_obj_sbu_motorsports_database_2023_h_t *o, double in);
 
 
 #ifdef __cplusplus
