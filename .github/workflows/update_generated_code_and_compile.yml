@@ -64,11 +64,6 @@ jobs:
         with:
           message: "Automated CAN interface file update"
           files: can_conv/*
-      - name: pass_new_commit_sha
-        id: pass
-        run: |
-          echo ::set-output name=auto_commit_sha::$(git rev-parse HEAD)
-          echo $(git rev-parse HEAD)
  auto_compile_all_sketches:
     runs-on: ubuntu-latest
     if: ${{ always() }}
