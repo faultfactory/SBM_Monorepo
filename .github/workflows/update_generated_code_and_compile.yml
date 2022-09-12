@@ -69,13 +69,14 @@ jobs:
         run: |
           echo ::set-output name=auto_commit_sha::$(git rev-parse HEAD)
           echo $(git rev-parse HEAD)
- auto_compile_all_sketches:
+ compile_all_sketches:
     runs-on: ubuntu-latest
     if: ${{ always() }}
     needs: [conditional_job_check_dbc, generate_c_interface]
     steps:
       - uses: actions/checkout@v3
       - name: conditional checkout
+      # if the dbc file as marked as changed, we have since made a new commit, check out the files and merge. 
         if: needs.conditional_job_check_dbc.outputs.dbc_changed == 'True'
         uses: actions/checkout@v3
         with: 
