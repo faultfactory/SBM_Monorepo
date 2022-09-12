@@ -12,7 +12,10 @@ The ```.dbc``` file that use used to define the CAN communication network for th
 
 At every push to the github server, a Github Action will fire, checking if any files in the ```dbc``` directory have changed. If they have, it will run and overwrite the output in the ```can_conv``` directory. It will then commit the changes.
 
-The underlying code used for the conversion can be seen [here](https://github.com/howerj/dbcc#dbc-convertercompiler). Please note the restriction on 8 byte. I think the 8-bites noted on the first paragraph is supposed to be bytes. 
+The underlying code used for the conversion can be seen [here](https://github.com/howerj/dbcc#dbc-convertercompiler). Please note the restriction on 8 byte. I think the 8-bites noted on the first paragraph is supposed to be bytes.
+
+There is a limitation on this. Only a single can ```.dbc``` file can be used across a single executable. So if you have more than one CAN bus network, all messages need to reside in a single file. Other libraries don't do that but they are slower. 
+
 
 **DANGER**: So as not to ruin other people's work, it's very important that you not rename the ```.dbc``` file and only add signals and messages to it. Modifying existing signal names and changing existing message structures may cause breaking changes that you'll need to fix later.
 
@@ -26,7 +29,6 @@ Amoung other things, here's what it always wants to see:
 <br>
 
 Because the parent directory and sketch file have the aformenetioned name requirements, you can't compile multiple sketches using the same ```src``` directory. That means we have to have the CAN interface files described above available in the ```src``` directory. Instead of making copies over and over again, we leverage symbolic links which are just a fancy shortcut pointing to another location. This is why you need to have Developer Mode on. It's a newer feature. Additionally, specify the cmd or powershell terminal for vscode and git usage so as to not break the symlinks. 
-
 
 It gets better with some more idiocy with the VSCode Arduino plugin. When opening a folder, VScode will create the ```.vscode``` directory for certain settings. An ```arduino.json``` will be created defining some settings for the board type and including the sketch files. So if you're using VSCode for compilation and serial monitor, just open the folder with the ```.ino``` file.
 
