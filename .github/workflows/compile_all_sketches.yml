@@ -1,0 +1,52 @@
+# This is a basic workflow to help you get started with Actions
+
+name: auto_compile_all_sketches
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  pull_request:
+    branches: [ "main" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  auto_compile_all_sketches:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+
+      # Runs a single command using the runners shell
+      - name: Path lister action
+        uses: Rishabh510/Path-lister-action@1.0
+        id: pl
+        with:
+          path: .
+          # Type of files to find
+          type: '.ino'
+      
+      # Compile each sketch:
+      - name: Report Number of found sketches
+        run: |
+          echo "Found ${{ steps.pl.outputs.path_count }} file(s) identified as Arduino Sketches:"
+          for i in ${{ steps.pl.outputs.paths }}; do
+          echo $i
+          done
+  
+      # Runs a set of commands using the runners shell
+      - name: Compile Arduino Sketches
+        uses: arduino/compile-sketches@v1
+        with:
+          fqbn: 'adafruit:samd:adafruit_feather_m4_can https://adafruit.github.io/arduino-board-index/package_adafruit_index.json'
+          libraries: |
+            - name: CAN Adafruit Fork
+            - name: SafeString
+          sketch-paths: ${{ steps.pl.outputs.paths }}
+
