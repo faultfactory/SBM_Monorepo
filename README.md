@@ -11,6 +11,7 @@ My hope here is to help the team understand how this all works as well as grease
 
 # ```TODO```:
 - Since the .dbc is stored here, data conversion tools should be alongside it to reference it.
-- I would reccomend removing the years from your files so this repository can continue to live from year to year. The M4 CAN board is plenty fast and the eco-system within Arduino would allow you to port easily to new platforms if required. You can always create ```git tags``` to describe a point in time that something was done. Assigning a year to this has the psychological impact of making the work seem stale and will drive people to abandon it and start fresh. Use numbers and allow the team to build on this from year to year. 
-- Create a README.md in the CAN_Demo_Node folder and encourage team to do the same. 
+- I would reccomend removing the years from your files so this repository can continue to live from year to year. The M4 CAN board is plenty fast and the eco-system within Arduino would allow you to port easily to new platforms if required. You can always create ```git tags``` to describe a point in time that something was done. 
+    - Why? Assigning a year to something like this has the psychological impact of making the work seem stale and will drive people to abandon it and start fresh. Making tags on the releases allows the team to build on this from year to year.
+- Create a README.md in the CAN_Demo_Node folder and encourage team to do the same. Write a document describing a good readme file with some links to how to use markdown. 
 
