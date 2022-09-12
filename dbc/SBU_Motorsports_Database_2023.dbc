@@ -45,7 +45,6 @@ BO_ 256 IMU: 8 Body_Orientation
  SG_ Body_Roll_deg : 0|16@1+ (0.1,0) [0|359] "deg"  Display_Screen
 
 
-
 CM_ SG_ 257 Body_Speed_mps "Velocity of the vehicle body in m/s
 
 Resolution of 0.1 m/s (0.224 mph)";
