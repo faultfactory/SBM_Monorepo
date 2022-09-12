@@ -41,7 +41,15 @@ jobs:
           done
   
       # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+      - name: Compile Arduino Sketches
+        uses: arduino/compile-sketches@v1
+        with:
+          platforms:  |
+            - name: 'adafruit:samd'
+            - source-url: 'https://adafruit.github.io/arduino-board-index/package_adafruit_index.json'
+          fqbn: 'adafruit:samd:adafruit_feather_m4_can'
+          libraries: |
+            - name: CAN Adafruit Fork
+            - name: SafeString
+          sketch-paths: ${{ steps.pl.outputs.paths }}
+
