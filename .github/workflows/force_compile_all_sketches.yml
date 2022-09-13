@@ -1,13 +1,9 @@
 # This is a basic workflow to help you get started with Actions
 
-name: auto_compile_all_sketches
+name: force_compile_all_sketches
 
 # Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
-  pull_request:
-    branches: [ "main" ]
-
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
@@ -44,7 +40,10 @@ jobs:
       - name: Compile Arduino Sketches
         uses: arduino/compile-sketches@v1
         with:
-          fqbn: 'adafruit:samd:adafruit_feather_m4_can https://adafruit.github.io/arduino-board-index/package_adafruit_index.json'
+          fqbn: 'adafruit:samd:adafruit_feather_m4_can'
+          platforms:  |
+            - name: "adafruit:samd"
+              source-url: "https://adafruit.github.io/arduino-board-index/package_adafruit_index.json"
           libraries: |
             - name: CAN Adafruit Fork
             - name: SafeString
