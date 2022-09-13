@@ -1,6 +1,6 @@
 #include <CAN.h>
 #include <millisDelay.h>
-#include "src/can_conv/SBU_Motorsports_Database_2023.h"
+#include "src/can_conv/sbm_network_definition.h"
 
 // Eventually you'll want to wrap the debugging printouts in 
 //  preprocessor directves so they are easily shut off. 
@@ -15,7 +15,7 @@ Serial.println("Userful but costly information").
 */ 
 
 // This defines the data storage object that the generated code us//s.
-static can_obj_sbu_motorsports_database_2023_h_t can_obj;
+static can_obj_sbm_network_definition_h_t can_obj;
 
 // here's some static storage for fake generated IMU signals
 static float yaw = 0.0f;
