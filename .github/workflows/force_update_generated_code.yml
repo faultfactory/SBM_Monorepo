@@ -37,5 +37,5 @@ jobs:
       - name: Git commit / Push Changes
         uses: actions-x/commit@v6
         with:
-          message: "Automated CAN interface file update"
+          message: "Manually Triggered CAN interface file update"
           files: can_conv/*
