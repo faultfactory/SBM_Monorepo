@@ -57,7 +57,7 @@ While you are 'passing through' Baja temporarily, you should write your code wit
   - Don't be trying to do something in the minimum number of lines of codes. 
   - Nobody cares. The compiler optimizes way better than we think we do anyway. 
   - Don't increment/decrement a variable with in the middle of an operation because you can. 
-  - If you have to do something that is obtuse because the classes defined don't easily handle this, then 
+  - If you have to do something that is obtuse because the naming can't easily describe, then add a code comment. But add a minimum of them because they tend to not get updated. 
 #### Don't repeat yourself 
   - If you're doing something repeatedly, break it out into a separate function.
   - If all boards have the same operation being done on something, make that into a library that can be refined and tested and documented.
