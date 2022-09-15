@@ -4,6 +4,13 @@ This was created to ease development of a compatible vehicle network for the tea
 
 My hope here is to help the team understand how this all works as well as grease the skids with some glue code, templates and cloud automation to allow you guys to focus on the actual domain content and getting data off the car quick with few limitations.
 
+To lower the barrier of entry and to make 'first year' execution simpler, this is based on the assumption that each node on the network is a [Adafruit Feather M4 CAN.](https://www.adafruit.com/product/4759). Other platforms can be adapted easily but I picked as a starting point this for the following reasons: 
+- Built-in CAN. No need to breadboard to test communications.
+- Well stocked. Tough to get other boards with built-in CAN that are on the shelf. 
+- Good eco system of boards for feather which makes it easier to prototype functionality.
+- Plenty of speed and RAM so the team doesn't have to worry processing constraints while getting feet wet.
+- Arduino eco system is familiar, and allows automation, no licenses. 
+
 I'd like to eventually be transferring this to the ```stonybrookmotorsports``` github organization. Just want to continue making helpful tweaks and documentation updates without restriction for a while. Feel free to dabble.
 
 ### [Some basic SW development concepts and tools relevant to this repo.](docs/crash_course.md)
