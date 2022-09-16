@@ -42,7 +42,7 @@ jobs:
         uses: KJ002/read-yaml@1.6
         with:
           file: ./required_arduino_libraries.yml
-          key-path: "libraries"
+          key-path: '["libraries"]'
 
       # Runs a set of commands using the runners shell
       - name: Compile Arduino Sketches
