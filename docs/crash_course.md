@@ -1,6 +1,6 @@
 # Crash Course on SW Development:
 
-Git, CI/CD, CAN, Compilation. **Scary**.<BR>  Relax. You'll be fine. This is in no particular order because there wasn't a cohesive flow. Generally [Clean Code](#Clean Code - Critical) and [Git](Git) are most important to understand early on. 
+Git, CI/CD, CAN, Compilation. **Scary**.<BR>  Relax. You'll be fine. This is in no particular order because there wasn't a cohesive flow. Generally [Clean Code](#clean-code---critical) and [Git](Git) are most important to understand early on. 
 
 ## Git: 
 Git is decentralized source control that has dominated the software industry for years now. It allows multiple parties to work on the same content simultaneously and then bring that work back together. Do not attempt to use it for Simulink files, only hand code. 
