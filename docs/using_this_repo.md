@@ -45,5 +45,6 @@ If you don't intend to use the Arduino features of VSCode, don't worry about it.
 5. Do not touch the ```can_conv``` directory in the root of the repo. You'll break the symbolic links.
 6. When editing the .dbc file, only use Vector CANDb++ editor and only add signals and messages.
      - Code is automatically generated based on signal and message names along with the message ID values. Changing these will break code referencing that generated code. 
-     - It is okay to re-arrange existing signals or add signals within a message as the generated code abstracts that away. 
+     - Avoid it in the long term but in the near term it is okay to re-arrange existing signals or add signals within a message as the generated code abstracts that away. 
+     - **Note that this will invalidate other recorded raw CAN logs. If you intend to use candump logs for replay, you'll need to leave the signals where they are.**
      - Do not move signals to another message unless the team has buy-in and you are ready to change code to accomodate the move.
