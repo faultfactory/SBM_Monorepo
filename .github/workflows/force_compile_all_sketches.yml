@@ -35,7 +35,15 @@ jobs:
           for i in ${{ steps.pl.outputs.paths }}; do
           echo $i
           done
-  
+
+      # Read the required libraries
+      - name: Read yaml
+        id: library_data
+        uses: KJ002/read-yaml@1.6
+        with:
+          file: ./required_arduino_libraries.yml
+          key-path: 'libraries'
+
       # Runs a set of commands using the runners shell
       - name: Compile Arduino Sketches
         uses: arduino/compile-sketches@v1
@@ -44,8 +52,6 @@ jobs:
           platforms:  |
             - name: "adafruit:samd"
               source-url: "https://adafruit.github.io/arduino-board-index/package_adafruit_index.json"
-          libraries: |
-            - name: CAN Adafruit Fork
-            - name: SafeString
+          libraries: ${{ steps.library_data.outputs.data }}
           sketch-paths: ${{ steps.pl.outputs.paths }}
 
