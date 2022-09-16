@@ -16,4 +16,5 @@ There is a limitation on this. Only a single can ```.dbc``` file can be used acr
 
 ## Automated Builds
 
-After checking,  and updating the CAN code if required, the GitHub Action moves on to searching the repository for any files ending in ```.ino``` which is an Arduino sketch file. At the moment it is building the sketches against the board definition for the Adafruit Feather M4 CAN. As more sensors are attached, more libraries will be needed to be incorporated into the build but that is easy to handle. At the moment there's only two added. 
+After checking,  and updating the CAN code if required, the GitHub Action moves on to searching the repository for any files ending in ```.ino``` which is an Arduino sketch file. At the moment it is building the sketches against the board definition for the Adafruit Feather M4 CAN. For the automated builds, libraries are managed by the [yaml file in the root](../required_arduino_libraries.yml). Be sure to get the proper syntax for the name of the library you're using and add it here and the builds will be verified automatically.
+
