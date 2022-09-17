@@ -21,15 +21,15 @@ static int pack_can_0x100_IMU(can_obj_sbm_network_definition_h_t *o, uint64_t *d
 	assert(data);
 	register uint64_t x;
 	register uint64_t i = 0;
-	/* Body_Roll_deg: start-bit 0, length 16, endianess intel, scaling 0.1, offset 0 */
-	x = ((uint16_t)(o->can_0x100_IMU.Body_Roll_deg)) & 0xffff;
+	/* Body_Roll_deg: start-bit 0, length 12, endianess intel, scaling 0.1, offset 0 */
+	x = ((uint16_t)(o->can_0x100_IMU.Body_Roll_deg)) & 0xfff;
 	i |= x;
-	/* Body_Pitch_deg: start-bit 16, length 16, endianess intel, scaling 0.1, offset 0 */
-	x = ((uint16_t)(o->can_0x100_IMU.Body_Pitch_deg)) & 0xffff;
+	/* Body_Pitch_deg: start-bit 16, length 12, endianess intel, scaling 0.1, offset 0 */
+	x = ((uint16_t)(o->can_0x100_IMU.Body_Pitch_deg)) & 0xfff;
 	x <<= 16; 
 	i |= x;
-	/* Body_Yaw_deg: start-bit 32, length 16, endianess intel, scaling 0.1, offset 0 */
-	x = ((uint16_t)(o->can_0x100_IMU.Body_Yaw_deg)) & 0xffff;
+	/* Body_Yaw_deg: start-bit 32, length 12, endianess intel, scaling 0.1, offset 0 */
+	x = ((uint16_t)(o->can_0x100_IMU.Body_Yaw_deg)) & 0xfff;
 	x <<= 32; 
 	i |= x;
 	*data = (i);
@@ -44,14 +44,14 @@ static int unpack_can_0x100_IMU(can_obj_sbm_network_definition_h_t *o, uint64_t 
 	register uint64_t i = (data);
 	if (dlc < 8)
 		return -1;
-	/* Body_Roll_deg: start-bit 0, length 16, endianess intel, scaling 0.1, offset 0 */
-	x = i & 0xffff;
+	/* Body_Roll_deg: start-bit 0, length 12, endianess intel, scaling 0.1, offset 0 */
+	x = i & 0xfff;
 	o->can_0x100_IMU.Body_Roll_deg = x;
-	/* Body_Pitch_deg: start-bit 16, length 16, endianess intel, scaling 0.1, offset 0 */
-	x = (i >> 16) & 0xffff;
+	/* Body_Pitch_deg: start-bit 16, length 12, endianess intel, scaling 0.1, offset 0 */
+	x = (i >> 16) & 0xfff;
 	o->can_0x100_IMU.Body_Pitch_deg = x;
-	/* Body_Yaw_deg: start-bit 32, length 16, endianess intel, scaling 0.1, offset 0 */
-	x = (i >> 32) & 0xffff;
+	/* Body_Yaw_deg: start-bit 32, length 12, endianess intel, scaling 0.1, offset 0 */
+	x = (i >> 32) & 0xfff;
 	o->can_0x100_IMU.Body_Yaw_deg = x;
 	o->can_0x100_IMU_rx = 1;
 	o->can_0x100_IMU_time_stamp_rx = time_stamp;
@@ -63,7 +63,7 @@ int decode_can_0x100_Body_Roll_deg(const can_obj_sbm_network_definition_h_t *o, 
 	assert(out);
 	double rval = (double)(o->can_0x100_IMU.Body_Roll_deg);
 	rval *= 0.1;
-	if (rval <= 359) {
+	if (rval <= 409.5) {
 		*out = rval;
 		return 0;
 	} else {
@@ -75,7 +75,7 @@ int decode_can_0x100_Body_Roll_deg(const can_obj_sbm_network_definition_h_t *o, 
 int encode_can_0x100_Body_Roll_deg(can_obj_sbm_network_definition_h_t *o, double in) {
 	assert(o);
 	o->can_0x100_IMU.Body_Roll_deg = 0;
-	if (in > 359)
+	if (in > 409.5)
 		return -1;
 	in *= 10;
 	o->can_0x100_IMU.Body_Roll_deg = in;
@@ -87,7 +87,7 @@ int decode_can_0x100_Body_Pitch_deg(const can_obj_sbm_network_definition_h_t *o,
 	assert(out);
 	double rval = (double)(o->can_0x100_IMU.Body_Pitch_deg);
 	rval *= 0.1;
-	if (rval <= 359) {
+	if (rval <= 409.5) {
 		*out = rval;
 		return 0;
 	} else {
@@ -99,7 +99,7 @@ int decode_can_0x100_Body_Pitch_deg(const can_obj_sbm_network_definition_h_t *o,
 int encode_can_0x100_Body_Pitch_deg(can_obj_sbm_network_definition_h_t *o, double in) {
 	assert(o);
 	o->can_0x100_IMU.Body_Pitch_deg = 0;
-	if (in > 359)
+	if (in > 409.5)
 		return -1;
 	in *= 10;
 	o->can_0x100_IMU.Body_Pitch_deg = in;
@@ -111,20 +111,12 @@ int decode_can_0x100_Body_Yaw_deg(const can_obj_sbm_network_definition_h_t *o, d
 	assert(out);
 	double rval = (double)(o->can_0x100_IMU.Body_Yaw_deg);
 	rval *= 0.1;
-	if (rval <= 359) {
-		*out = rval;
-		return 0;
-	} else {
-		*out = (double)0;
-		return -1;
-	}
+	*out = rval;
+	return 0;
 }
 
 int encode_can_0x100_Body_Yaw_deg(can_obj_sbm_network_definition_h_t *o, double in) {
 	assert(o);
-	o->can_0x100_IMU.Body_Yaw_deg = 0;
-	if (in > 359)
-		return -1;
 	in *= 10;
 	o->can_0x100_IMU.Body_Yaw_deg = in;
 	return 0;
