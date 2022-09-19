@@ -20,7 +20,7 @@ In many cases, there are some local networks for functions to segregate the lowe
 
 ![image](current_approach.png)
 
-Now if you're thinking this is a lot of diverse hardware, you're right and the OEMS hate it. Many of these controllers are provided by a supplier who uses their own selection of chip and hardware package and have their own power requirements. Because of this, the industry is looking towards a concept called Software Defined Vehicle. The specifics different based on who you ask but the concept is to reduce the cost of developing software for these systems by commonizing to a common computation system that is repeated in multiple places along the vehicle. <br><br>
+Now if you're thinking this is a lot of diverse hardware, you're right and the OEMS hate it. Many of these controllers are provided by a supplier who uses their own selection of chip and hardware package and have their own power requirements. Because of this, the industry is looking towards a concept called Software Defined Vehicle. The specifics different based on who you ask but the concept is to reduce the cost of developing software for these systems by simplifying this to a common computation system that is repeated in multiple places along the vehicle. Those platforms would then be purchased in larger numbers and more easily supported both in development and warranty. <br><br>
 
 ![image](software_defined_vehicle.png)
 
