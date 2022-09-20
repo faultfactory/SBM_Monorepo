@@ -1,6 +1,9 @@
 # Data Pipeline
 
-This folder contains the details on getting data out and any automated analysis that may be done. At the moment this is manual operation but in time potentially can be automated to remove this burden from the team.
+This folder contains the details on getting data out and any automated analysis that may be done. At the moment this is manual operation but in time potentially can be automated to remove this burden from the team.<br>
+
+Raise a github issue for a feature request. 
+
 
 ## Logging
 This folder contains the required tools for conversion and analysis for CAN data coming from the logger.
@@ -30,6 +33,8 @@ It should have dropped a .mat file in the same directory. There is a test log fi
 
 # TODO: 
 
-- Add the ability to pull the .dbc from a specific git commit hash. 
+Minimum viable product is up and running. Further refinements:
+- Add the ability to pull the .dbc from a specific git commit hash so the team can update frequently.
 - Deal with frame ids not in the .dbc. Signals we would not have the ability to tell
 - Change output file names so the system can be used for a directory of multiple files.
+- Cloud-ify this so the team does not have to do any of the manual work.
