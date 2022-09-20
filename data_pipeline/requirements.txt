@@ -1,0 +1,5 @@
+cantools==37.2.0
+h5py==3.7.0
+hdf5storage==0.1.18
+numpy==1.23.3
+requests==2.28.1
