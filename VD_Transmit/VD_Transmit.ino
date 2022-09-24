@@ -16,10 +16,6 @@ Adafruit_LIS3MDL lis3mdl;
 
 /*******************************************************************************/
 
-static float roll = 0.0f;
-static float pitch = 0.0f;
-static float yaw = 0.0f;
-
 /* This defines the data storage object that the generated code us//s */
 static can_obj_sbm_network_definition_h_t can_obj;
 
@@ -53,30 +49,30 @@ void setup()
   CAN_Send_Delay.start(10); // We want to execute after every 1000 milliseconds
   
   /*******************************************************************************/
-   bool lsm6ds_success, lis3mdl_success;
+  bool lsm6ds_success, lis3mdl_success;
 
   /* Hardware I2C mode, can pass in address & alt wire */
   lsm6ds_success = lsm6ds.begin_I2C();
   lis3mdl_success = lis3mdl.begin_I2C();
 
   if (!lsm6ds_success){
-    Serial.println("Failed to find LSM6DS chip");
+    //Serial.println("Failed to find LSM6DS chip");
   }
   if (!lis3mdl_success){
-    Serial.println("Failed to find LIS3MDL chip");
+    //Serial.println("Failed to find LIS3MDL chip");
   }
   
-  Serial.println("LSM6DS and LIS3MDL Found!");
+  //Serial.println("LSM6DS and LIS3MDL Found!");
   
   /*******************************************************************************/
   /* Configure accelerometer range */
-  lsm6ds.setAccelRange(LSM6DS_ACCEL_RANGE_4_G);
+  lsm6ds.setAccelRange(LSM6DS_ACCEL_RANGE_2_G);
 
   /* Configure accelerometer data rate */
   lsm6ds.setAccelDataRate(LSM6DS_RATE_208_HZ);
 
   /* Configure gyro range */
-  lsm6ds.setGyroRange(LSM6DS_GYRO_RANGE_2000_DPS);
+  lsm6ds.setGyroRange(LSM6DS_GYRO_RANGE_250_DPS);
 
   /* Configure gyro data rate */
   lsm6ds.setGyroDataRate(LSM6DS_RATE_208_HZ);
@@ -89,7 +85,7 @@ void setup()
   lis3mdl.setRange(LIS3MDL_RANGE_4_GAUSS);
 
   /* Configure magnetometer performance mode */
-  lis3mdl.setPerformanceMode(LIS3MDL_MEDIUMMODE);
+  lis3mdl.setPerformanceMode(LIS3MDL_HIGHMODE);
 
   /* Configure magnetometer operation mode */
   lis3mdl.setOperationMode(LIS3MDL_CONTINUOUSMODE);
@@ -123,41 +119,61 @@ void loop()
     // This library does not allow drift and logs the actual expiration time. 
     CAN_Send_Delay.repeat(); 
 
-    /* TEMPORARY. Need to update dbc file to incorporate acceleration values */
-    roll = accel.acceleration.x;
-    pitch = accel.acceleration.y;
-    yaw = accel.acceleration.z;
-    
-    Serial.println("Sending the following values through CAN");
-    Serial.print("Accel X: "); Serial.println(roll);
-    Serial.print("Accel Y: "); Serial.println(pitch);
-    Serial.print("Accel Z: "); Serial.println(yaw);
-
-    // encoding each value into the 64 bit can message per the 
+    /**********************************************************************************************/
+//    /* DEBUG PRINT LINES */
+//    //Serial.println("Sending the following values through CAN");
+//    // Acceleration data
+//    Serial.print(accel.acceleration.x);Serial.print(" ");
+//    Serial.print(accel.acceleration.y);Serial.print(" ");
+//    Serial.print(accel.acceleration.z);Serial.print(" ");
+//    // Gyroscope data
+//    Serial.print(gyro.gyro.x);Serial.print(" ");
+//    Serial.print(gyro.gyro.y);Serial.print(" ");
+//    Serial.print(gyro.gyro.z);Serial.print(" ");
+//    // Magnetometer data
+//    Serial.print(mag.magnetic.x);Serial.print(" ");
+//    Serial.print(mag.magnetic.y);Serial.print(" ");
+//    Serial.println(mag.magnetic.z);
+  /**********************************************************************************************/
+  
+    /* Encoding each value into the 64 bit can message per the 
     // bit structure, scaling and offset defined in the .dbc file
     // this puts the data into storage in the can_obj variable.
     // its datatype was created by dbcc and encompaseses the whole .dbc
-    encode_can_0x100_Body_Roll_deg(&can_obj,roll); 
-    encode_can_0x100_Body_Pitch_deg(&can_obj,pitch);
-    encode_can_0x100_Body_Yaw_deg(&can_obj,yaw);
+    */
+    // ACCELERATION DATA
+    encode_can_0x102_Raw_Accel_x_mps2(&can_obj,accel.acceleration.x); 
+    encode_can_0x102_Raw_Accel_y_mps2(&can_obj,accel.acceleration.y);
+    encode_can_0x102_Raw_Accel_z_mps2(&can_obj,accel.acceleration.z);
+
+    // GYROSCOPE DATA
+    encode_can_0x102_Raw_Gyro_x_rps(&can_obj,gyro.gyro.x); 
+    encode_can_0x102_Raw_Gyro_y_rps(&can_obj,gyro.gyro.y);
+    encode_can_0x102_Raw_Gyro_z_rps(&can_obj,gyro.gyro.z);
+
+    // MAGNETOMETER DATA
+    encode_can_0x103_Raw_Mag_x_uT(&can_obj,mag.magnetic.x); 
+    encode_can_0x103_Raw_Mag_y_uT(&can_obj,mag.magnetic.y);
+    encode_can_0x103_Raw_Mag_z_uT(&can_obj,mag.magnetic.z);
+    
     
     // This is the union datatype that allows us to read in uint64_t or uint8_t[8]
-    MsgData msg;  
+    MsgData msg_102;
+    MsgData msg_103;
 
     // This command unloads the message
-    pack_message(&can_obj,0x100,&msg.a);
+    pack_message(&can_obj,0x102,&msg_102.a); // Gyro & accel
+    pack_message(&can_obj,0x103,&msg_103.a); // Mag
 
-    CAN.beginPacket(0x100,8,false);
-    CAN.write(msg.b,8);
+    // Accel & Gyro
+    CAN.beginPacket(0x102,8,false);
+    CAN.write(msg_102.b,8);
     CAN.endPacket();  
 
-    // After sending the message we can go ahead and encode zeros across
-    // the entire storage structure to give ourselves more confidence that
-    // the code is doing what we expect. This is not required. just a demonstration
-    // that we're not looking at our old values. 
-    encode_can_0x100_Body_Roll_deg(&can_obj,0.0f); 
-    encode_can_0x100_Body_Pitch_deg(&can_obj,0.0f);
-    encode_can_0x100_Body_Yaw_deg(&can_obj,0.0f);
+    // Mag
+    CAN.beginPacket(0x103,8,false);
+    CAN.write(msg_103.b,8);
+    CAN.endPacket();  
   }    
   
 }
