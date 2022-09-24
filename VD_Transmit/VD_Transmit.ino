@@ -2,7 +2,7 @@
 
 #include <CAN.h>
 #include <millisDelay.h>
-#include "src/can_conv/SBU_Motorsports_Database_2023.h"
+#include "src/sbm_network_definition.h"
 
 #define SERIAL_DEBUG_PRINTS_ON 1
 
