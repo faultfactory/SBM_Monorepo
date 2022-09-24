@@ -21,7 +21,7 @@ static float pitch = 0.0f;
 static float yaw = 0.0f;
 
 /* This defines the data storage object that the generated code us//s */
-static can_obj_sbu_motorsports_database_2023_h_t can_obj;
+static can_obj_sbm_network_definition_h_t can_obj;
 
 // Unions are special datatypes that provide two views of the same memmory location.
 union MsgData
