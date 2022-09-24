@@ -36,16 +36,47 @@ BS_:
 BU_: Display_Screen Body_Orientation
 
 
+BO_ 259 RAW_Mag: 8 Body_Orientation
+ SG_ Raw_Mag_z_uT : 16|8@1- (1,0) [-128|127] "uTesla"  Display_Screen
+ SG_ Raw_Mag_y_uT : 8|8@1- (1,0) [-128|127] "uTesla"  Display_Screen
+ SG_ Raw_Mag_x_uT : 0|8@1- (1,0) [-128|127] "uTesla"  Display_Screen
+
+BO_ 258 RAW_Accel_Gyro: 8 Body_Orientation
+ SG_ Raw_Gyro_z_rps : 48|8@1- (0.1,0) [-12.8|12.7] "rad/s"  Display_Screen
+ SG_ Raw_Gyro_y_rps : 40|8@1- (0.1,0) [-12.8|12.7] "rad/s"  Display_Screen
+ SG_ Raw_Gyro_x_rps : 32|8@1- (0.1,0) [-12.8|12.7] "rad/s"  Display_Screen
+ SG_ Raw_Accel_z_mps2 : 18|9@1- (0.1,0) [-25.6|25.5] "m/s^2"  Display_Screen
+ SG_ Raw_Accel_y_mps2 : 9|9@1- (0.1,0) [-25.6|25.5] "m/s^2"  Display_Screen
+ SG_ Raw_Accel_x_mps2 : 0|9@1- (0.1,0) [-25.6|25.5] "m/s^2"  Display_Screen
+
 BO_ 257 GPS: 8 Body_Orientation
  SG_ Body_Speed_mps : 0|8@1+ (0.1,0) [0|25.5] "m/s"  Display_Screen
 
 BO_ 256 IMU: 8 Body_Orientation
- SG_ Body_Yaw_deg : 32|12@1+ (0.1,0) [0|6553.5] "deg"  Display_Screen
+ SG_ Body_Yaw_deg : 32|12@1+ (0.1,0) [0|409.5] "deg"  Display_Screen
  SG_ Body_Pitch_deg : 16|12@1+ (0.1,0) [0|409.5] "deg"  Display_Screen
  SG_ Body_Roll_deg : 0|12@1+ (0.1,0) [0|409.5] "deg"  Display_Screen
 
 
 
+CM_ SG_ 259 Raw_Mag_z_uT "Raw magnetic field data from magnetometer (microTesla)
+z-Axis";
+CM_ SG_ 259 Raw_Mag_y_uT "Raw magnetic field data from magnetometer (microTesla)
+y-Axis";
+CM_ SG_ 259 Raw_Mag_x_uT "Raw magnetic field data from magnetometer (microTesla)
+x-Axis";
+CM_ SG_ 258 Raw_Gyro_z_rps "Raw angular velocity data from gyroscope (rad/s)
+z-Axis";
+CM_ SG_ 258 Raw_Gyro_y_rps "Raw angular velocity data from gyroscope (rad/s)
+y-Axis";
+CM_ SG_ 258 Raw_Gyro_x_rps "Raw angular velocity data from gyroscope (rad/s)
+x-Axis";
+CM_ SG_ 258 Raw_Accel_z_mps2 "Raw acceleration data from the accelerometer (m/s^2)
+z-Axis";
+CM_ SG_ 258 Raw_Accel_y_mps2 "Raw acceleration data from the accelerometer (m/s^2)
+y-Axis";
+CM_ SG_ 258 Raw_Accel_x_mps2 "Raw acceleration data from the accelerometer (m/s^2)
+x-Axis";
 CM_ SG_ 257 Body_Speed_mps "Velocity of the vehicle body in m/s
 
 Resolution of 0.1 m/s (0.224 mph)";

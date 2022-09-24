@@ -65,16 +65,68 @@ Resolution of 0.1 m/s (0.224 mph) */
 } POSTPACK can_0x101_GPS_t;
 
 typedef PREPACK struct {
+	/* Raw_Accel_x_mps2: Raw acceleration data from the accelerometer (m/s^2)
+x-Axis */
+	/* scaling 0.1, offset 0.0, units m/s^2  */
+	int16_t Raw_Accel_x_mps2;
+	/* Raw_Accel_y_mps2: Raw acceleration data from the accelerometer (m/s^2)
+y-Axis */
+	/* scaling 0.1, offset 0.0, units m/s^2  */
+	int16_t Raw_Accel_y_mps2;
+	/* Raw_Accel_z_mps2: Raw acceleration data from the accelerometer (m/s^2)
+z-Axis */
+	/* scaling 0.1, offset 0.0, units m/s^2  */
+	int16_t Raw_Accel_z_mps2;
+	/* Raw_Gyro_x_rps: Raw angular velocity data from gyroscope (rad/s)
+x-Axis */
+	/* scaling 0.1, offset 0.0, units rad/s  */
+	int8_t Raw_Gyro_x_rps;
+	/* Raw_Gyro_y_rps: Raw angular velocity data from gyroscope (rad/s)
+y-Axis */
+	/* scaling 0.1, offset 0.0, units rad/s  */
+	int8_t Raw_Gyro_y_rps;
+	/* Raw_Gyro_z_rps: Raw angular velocity data from gyroscope (rad/s)
+z-Axis */
+	/* scaling 0.1, offset 0.0, units rad/s  */
+	int8_t Raw_Gyro_z_rps;
+} POSTPACK can_0x102_RAW_Accel_Gyro_t;
+
+typedef PREPACK struct {
+	/* Raw_Mag_x_uT: Raw magnetic field data from magnetometer (microTesla)
+x-Axis */
+	/* scaling 1.0, offset 0.0, units uTesla  */
+	int8_t Raw_Mag_x_uT;
+	/* Raw_Mag_y_uT: Raw magnetic field data from magnetometer (microTesla)
+y-Axis */
+	/* scaling 1.0, offset 0.0, units uTesla  */
+	int8_t Raw_Mag_y_uT;
+	/* Raw_Mag_z_uT: Raw magnetic field data from magnetometer (microTesla)
+z-Axis */
+	/* scaling 1.0, offset 0.0, units uTesla  */
+	int8_t Raw_Mag_z_uT;
+} POSTPACK can_0x103_RAW_Mag_t;
+
+typedef PREPACK struct {
 	dbcc_time_stamp_t can_0x100_IMU_time_stamp_rx;
 	dbcc_time_stamp_t can_0x101_GPS_time_stamp_rx;
+	dbcc_time_stamp_t can_0x102_RAW_Accel_Gyro_time_stamp_rx;
+	dbcc_time_stamp_t can_0x103_RAW_Mag_time_stamp_rx;
 	unsigned can_0x100_IMU_status : 2;
 	unsigned can_0x100_IMU_tx : 1;
 	unsigned can_0x100_IMU_rx : 1;
 	unsigned can_0x101_GPS_status : 2;
 	unsigned can_0x101_GPS_tx : 1;
 	unsigned can_0x101_GPS_rx : 1;
+	unsigned can_0x102_RAW_Accel_Gyro_status : 2;
+	unsigned can_0x102_RAW_Accel_Gyro_tx : 1;
+	unsigned can_0x102_RAW_Accel_Gyro_rx : 1;
+	unsigned can_0x103_RAW_Mag_status : 2;
+	unsigned can_0x103_RAW_Mag_tx : 1;
+	unsigned can_0x103_RAW_Mag_rx : 1;
 	can_0x100_IMU_t can_0x100_IMU;
 	can_0x101_GPS_t can_0x101_GPS;
+	can_0x102_RAW_Accel_Gyro_t can_0x102_RAW_Accel_Gyro;
+	can_0x103_RAW_Mag_t can_0x103_RAW_Mag;
 } POSTPACK can_obj_sbm_network_definition_h_t;
 
 int unpack_message(can_obj_sbm_network_definition_h_t *o, const unsigned long id, uint64_t data, uint8_t dlc, dbcc_time_stamp_t time_stamp);
@@ -91,6 +143,28 @@ int encode_can_0x100_Body_Yaw_deg(can_obj_sbm_network_definition_h_t *o, double 
 
 int decode_can_0x101_Body_Speed_mps(const can_obj_sbm_network_definition_h_t *o, double *out);
 int encode_can_0x101_Body_Speed_mps(can_obj_sbm_network_definition_h_t *o, double in);
+
+
+int decode_can_0x102_Raw_Accel_x_mps2(const can_obj_sbm_network_definition_h_t *o, double *out);
+int encode_can_0x102_Raw_Accel_x_mps2(can_obj_sbm_network_definition_h_t *o, double in);
+int decode_can_0x102_Raw_Accel_y_mps2(const can_obj_sbm_network_definition_h_t *o, double *out);
+int encode_can_0x102_Raw_Accel_y_mps2(can_obj_sbm_network_definition_h_t *o, double in);
+int decode_can_0x102_Raw_Accel_z_mps2(const can_obj_sbm_network_definition_h_t *o, double *out);
+int encode_can_0x102_Raw_Accel_z_mps2(can_obj_sbm_network_definition_h_t *o, double in);
+int decode_can_0x102_Raw_Gyro_x_rps(const can_obj_sbm_network_definition_h_t *o, double *out);
+int encode_can_0x102_Raw_Gyro_x_rps(can_obj_sbm_network_definition_h_t *o, double in);
+int decode_can_0x102_Raw_Gyro_y_rps(const can_obj_sbm_network_definition_h_t *o, double *out);
+int encode_can_0x102_Raw_Gyro_y_rps(can_obj_sbm_network_definition_h_t *o, double in);
+int decode_can_0x102_Raw_Gyro_z_rps(const can_obj_sbm_network_definition_h_t *o, double *out);
+int encode_can_0x102_Raw_Gyro_z_rps(can_obj_sbm_network_definition_h_t *o, double in);
+
+
+int decode_can_0x103_Raw_Mag_x_uT(const can_obj_sbm_network_definition_h_t *o, int8_t *out);
+int encode_can_0x103_Raw_Mag_x_uT(can_obj_sbm_network_definition_h_t *o, int8_t in);
+int decode_can_0x103_Raw_Mag_y_uT(const can_obj_sbm_network_definition_h_t *o, int8_t *out);
+int encode_can_0x103_Raw_Mag_y_uT(can_obj_sbm_network_definition_h_t *o, int8_t in);
+int decode_can_0x103_Raw_Mag_z_uT(const can_obj_sbm_network_definition_h_t *o, int8_t *out);
+int encode_can_0x103_Raw_Mag_z_uT(can_obj_sbm_network_definition_h_t *o, int8_t in);
 
 
 #ifdef __cplusplus
