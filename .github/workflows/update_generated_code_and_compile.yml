@@ -28,7 +28,7 @@ jobs:
       id: check_file_changed
       run: |
         # Diff HEAD with the previous commit
-        $diff = git diff --name-only HEAD^ HEAD
+        $diff = git diff --name-only ${{github.event.before}} ${{github.sha}}
 
         # Check if a file under dbc/ or with the .dbc extension has changed (added, modified, deleted)
         $SourceDiff = $diff | Where-Object { $_ -match '^dbc/' -or $_ -match '.dbc$' }
