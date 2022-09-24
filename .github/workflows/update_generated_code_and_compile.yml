@@ -20,15 +20,15 @@ jobs:
     outputs:
       dbc_changed: ${{ steps.check_file_changed.outputs.dbc_changed }}
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         # Checkout as many commits as needed for the diff
-        fetch-depth: 2
+        fetch-depth: 0 # this gets all commits
     - shell: pwsh
       id: check_file_changed
       run: |
-        # Diff HEAD with the previous commit
-        $diff = git diff --name-only HEAD^ HEAD
+        # Diff HEAD with the last commit pushed
+        $diff = git diff --name-only ${{github.event.before}} ${{github.event.after}}
 
         # Check if a file under dbc/ or with the .dbc extension has changed (added, modified, deleted)
         $SourceDiff = $diff | Where-Object { $_ -match '^dbc/' -or $_ -match '.dbc$' }
