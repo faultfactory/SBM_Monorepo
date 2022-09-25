@@ -1,3 +1,6 @@
 libraries:
   - name: CAN Adafruit Fork
   - name: SafeString
+  - name: Adafruit LSM6DS
+  - name: Adafruit LIS3MDL
+  - name: Adafruit BusIO
