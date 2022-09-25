@@ -38,8 +38,6 @@ void setup()
   digitalWrite(PIN_CAN_BOOSTEN, true); // turn on booster
 
   Serial.begin(115200);
-  // NOTE: You'll need to get rid of this eventually
-  while (!Serial); // THIS STOPS YOU FROM RUNNING UNTIL YOUR USB IS PLUGGED IN!
   // start the CAN bus at 500 kbps
     CAN.begin(500000);
 

@@ -25,8 +25,6 @@ void setup()
 
 
   Serial.begin(115200);
-  // NOTE: You'll need to get rid of this eventually
-  while (!Serial); // THIS STOPS YOU FROM RUNNING UNTIL YOUR USB IS PLUGGED IN!
   // start the CAN bus at 500 kbps
     CAN.begin(500000);
 }
@@ -78,7 +76,7 @@ void loop()
     
 
     /**********************************************************************************************/
-//    /* DEBUG PRINT LINES */
+    /* DEBUG PRINT LINES */
 //    //Serial.println("Received data:");
 //    // Acceleration data
 //    Serial.print(accelX_in);Serial.print(" ");
