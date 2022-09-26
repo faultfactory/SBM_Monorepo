@@ -2,19 +2,16 @@
 
 #include <CAN.h>
 #include <millisDelay.h>
-#include "src/can_conv/sbm_network_definition.h"
-
-#define SERIAL_DEBUG_PRINTS_ON 1
-
-/*******************************************************************************/
-
 #include <Adafruit_LSM6DSOX.h>
-Adafruit_LSM6DSOX lsm6ds;
-
 #include <Adafruit_LIS3MDL.h>
-Adafruit_LIS3MDL lis3mdl;
-
+#include "src/can_conv/sbm_network_definition.h"
+#define SERIAL_DEBUG_PRINTS_ON 0
 /*******************************************************************************/
+
+// Create IMU objects
+Adafruit_LSM6DSOX lsm6ds;
+Adafruit_LIS3MDL lis3mdl;
+bool lsm6ds_success, lis3mdl_success;
 
 /* This defines the data storage object that the generated code us//s */
 static can_obj_sbm_network_definition_h_t can_obj;
@@ -27,8 +24,6 @@ union MsgData
 };
 
 millisDelay CAN_Send_Delay; 
-
-
 void setup()
 {
   /*******************************************************************************/
@@ -44,23 +39,24 @@ void setup()
   // creating a millsDelay object using the library <millsDelay.h>
   // This provides non-blocking delays that don't obstruct execution
   // like using the standard delay() function would. 
-  CAN_Send_Delay.start(10); // We want to execute after every 1000 milliseconds
+  CAN_Send_Delay.start(10); //10 ms -> 100 Hz (Sending 2 messages at 100 Hz, so 200 messages/sec)
   
   /*******************************************************************************/
-  bool lsm6ds_success, lis3mdl_success;
-
+ 
   /* Hardware I2C mode, can pass in address & alt wire */
   lsm6ds_success = lsm6ds.begin_I2C();
   lis3mdl_success = lis3mdl.begin_I2C();
 
+  #if SERIAL_DEBUG_PRINTS_ON
   if (!lsm6ds_success){
-    //Serial.println("Failed to find LSM6DS chip");
+    Serial.println("Failed to find LSM6DS chip");
   }
   if (!lis3mdl_success){
-    //Serial.println("Failed to find LIS3MDL chip");
+    Serial.println("Failed to find LIS3MDL chip");
   }
   
-  //Serial.println("LSM6DS and LIS3MDL Found!");
+  Serial.println("LSM6DS and LIS3MDL Found!");
+  #endif
   
   /*******************************************************************************/
   /* Configure accelerometer range */
@@ -119,19 +115,20 @@ void loop()
 
     /**********************************************************************************************/
 //    /* DEBUG PRINT LINES */
-//    //Serial.println("Sending the following values through CAN");
-//    // Acceleration data
-//    Serial.print(accel.acceleration.x);Serial.print(" ");
-//    Serial.print(accel.acceleration.y);Serial.print(" ");
-//    Serial.print(accel.acceleration.z);Serial.print(" ");
-//    // Gyroscope data
-//    Serial.print(gyro.gyro.x);Serial.print(" ");
-//    Serial.print(gyro.gyro.y);Serial.print(" ");
-//    Serial.print(gyro.gyro.z);Serial.print(" ");
-//    // Magnetometer data
-//    Serial.print(mag.magnetic.x);Serial.print(" ");
-//    Serial.print(mag.magnetic.y);Serial.print(" ");
-//    Serial.println(mag.magnetic.z);
+    #if SERIAL_DEBUG_PRINTS_ON
+    // Acceleration data
+    Serial.print(accel.acceleration.x);Serial.print(" ");
+    Serial.print(accel.acceleration.y);Serial.print(" ");
+    Serial.print(accel.acceleration.z);Serial.print(" ");
+    // Gyroscope data
+    Serial.print(gyro.gyro.x);Serial.print(" ");
+    Serial.print(gyro.gyro.y);Serial.print(" ");
+    Serial.print(gyro.gyro.z);Serial.print(" ");
+    // Magnetometer data
+    Serial.print(mag.magnetic.x);Serial.print(" ");
+    Serial.print(mag.magnetic.y);Serial.print(" ");
+    Serial.println(mag.magnetic.z);
+    #endif
   /**********************************************************************************************/
   
     /* Encoding each value into the 64 bit can message per the 
