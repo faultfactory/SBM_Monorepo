@@ -529,6 +529,106 @@ int print_can_0x103_RAW_Mag(const can_obj_sbm_network_definition_h_t *o, FILE *o
 	return r;
 }
 
+static int pack_can_0x104_CAN_Logger_End(can_obj_sbm_network_definition_h_t *o, uint64_t *data) {
+	assert(o);
+	assert(data);
+	register uint64_t x;
+	register uint64_t i = 0;
+	/* CAN_Logger: start-bit 0, length 1, endianess intel, scaling 1, offset 0 */
+	x = ((uint8_t)(o->can_0x104_CAN_Logger_End.CAN_Logger)) & 0x1;
+	i |= x;
+	*data = (i);
+	o->can_0x104_CAN_Logger_End_tx = 1;
+	return 0;
+}
+
+static int unpack_can_0x104_CAN_Logger_End(can_obj_sbm_network_definition_h_t *o, uint64_t data, uint8_t dlc, dbcc_time_stamp_t time_stamp) {
+	assert(o);
+	assert(dlc <= 8);
+	register uint64_t x;
+	register uint64_t i = (data);
+	if (dlc < 8)
+		return -1;
+	/* CAN_Logger: start-bit 0, length 1, endianess intel, scaling 1, offset 0 */
+	x = i & 0x1;
+	o->can_0x104_CAN_Logger_End.CAN_Logger = x;
+	o->can_0x104_CAN_Logger_End_rx = 1;
+	o->can_0x104_CAN_Logger_End_time_stamp_rx = time_stamp;
+	return 0;
+}
+
+int decode_can_0x104_CAN_Logger(const can_obj_sbm_network_definition_h_t *o, uint8_t *out) {
+	assert(o);
+	assert(out);
+	uint8_t rval = (uint8_t)(o->can_0x104_CAN_Logger_End.CAN_Logger);
+	*out = rval;
+	return 0;
+}
+
+int encode_can_0x104_CAN_Logger(can_obj_sbm_network_definition_h_t *o, uint8_t in) {
+	assert(o);
+	o->can_0x104_CAN_Logger_End.CAN_Logger = in;
+	return 0;
+}
+
+int print_can_0x104_CAN_Logger_End(const can_obj_sbm_network_definition_h_t *o, FILE *output) {
+	assert(o);
+	assert(output);
+	int r = 0;
+	r = print_helper(r, fprintf(output, "CAN_Logger = (wire: %.0f)\n", (double)(o->can_0x104_CAN_Logger_End.CAN_Logger)));
+	return r;
+}
+
+static int pack_can_0x105_CAN_Logger_Begin(can_obj_sbm_network_definition_h_t *o, uint64_t *data) {
+	assert(o);
+	assert(data);
+	register uint64_t x;
+	register uint64_t i = 0;
+	/* CAN_Logger: start-bit 0, length 1, endianess intel, scaling 1, offset 0 */
+	x = ((uint8_t)(o->can_0x105_CAN_Logger_Begin.CAN_Logger)) & 0x1;
+	i |= x;
+	*data = (i);
+	o->can_0x105_CAN_Logger_Begin_tx = 1;
+	return 0;
+}
+
+static int unpack_can_0x105_CAN_Logger_Begin(can_obj_sbm_network_definition_h_t *o, uint64_t data, uint8_t dlc, dbcc_time_stamp_t time_stamp) {
+	assert(o);
+	assert(dlc <= 8);
+	register uint64_t x;
+	register uint64_t i = (data);
+	if (dlc < 8)
+		return -1;
+	/* CAN_Logger: start-bit 0, length 1, endianess intel, scaling 1, offset 0 */
+	x = i & 0x1;
+	o->can_0x105_CAN_Logger_Begin.CAN_Logger = x;
+	o->can_0x105_CAN_Logger_Begin_rx = 1;
+	o->can_0x105_CAN_Logger_Begin_time_stamp_rx = time_stamp;
+	return 0;
+}
+
+int decode_can_0x105_CAN_Logger(const can_obj_sbm_network_definition_h_t *o, uint8_t *out) {
+	assert(o);
+	assert(out);
+	uint8_t rval = (uint8_t)(o->can_0x105_CAN_Logger_Begin.CAN_Logger);
+	*out = rval;
+	return 0;
+}
+
+int encode_can_0x105_CAN_Logger(can_obj_sbm_network_definition_h_t *o, uint8_t in) {
+	assert(o);
+	o->can_0x105_CAN_Logger_Begin.CAN_Logger = in;
+	return 0;
+}
+
+int print_can_0x105_CAN_Logger_Begin(const can_obj_sbm_network_definition_h_t *o, FILE *output) {
+	assert(o);
+	assert(output);
+	int r = 0;
+	r = print_helper(r, fprintf(output, "CAN_Logger = (wire: %.0f)\n", (double)(o->can_0x105_CAN_Logger_Begin.CAN_Logger)));
+	return r;
+}
+
 int unpack_message(can_obj_sbm_network_definition_h_t *o, const unsigned long id, uint64_t data, uint8_t dlc, dbcc_time_stamp_t time_stamp) {
 	assert(o);
 	assert(id < (1ul << 29)); /* 29-bit CAN ID is largest possible */
@@ -538,6 +638,8 @@ int unpack_message(can_obj_sbm_network_definition_h_t *o, const unsigned long id
 	case 0x101: return unpack_can_0x101_GPS(o, data, dlc, time_stamp);
 	case 0x102: return unpack_can_0x102_RAW_Accel_Gyro(o, data, dlc, time_stamp);
 	case 0x103: return unpack_can_0x103_RAW_Mag(o, data, dlc, time_stamp);
+	case 0x104: return unpack_can_0x104_CAN_Logger_End(o, data, dlc, time_stamp);
+	case 0x105: return unpack_can_0x105_CAN_Logger_Begin(o, data, dlc, time_stamp);
 	default: break; 
 	}
 	return -1; 
@@ -551,6 +653,8 @@ int pack_message(can_obj_sbm_network_definition_h_t *o, const unsigned long id, 
 	case 0x101: return pack_can_0x101_GPS(o, data);
 	case 0x102: return pack_can_0x102_RAW_Accel_Gyro(o, data);
 	case 0x103: return pack_can_0x103_RAW_Mag(o, data);
+	case 0x104: return pack_can_0x104_CAN_Logger_End(o, data);
+	case 0x105: return pack_can_0x105_CAN_Logger_Begin(o, data);
 	default: break; 
 	}
 	return -1; 
@@ -565,6 +669,8 @@ int print_message(const can_obj_sbm_network_definition_h_t *o, const unsigned lo
 	case 0x101: return print_can_0x101_GPS(o, output);
 	case 0x102: return print_can_0x102_RAW_Accel_Gyro(o, output);
 	case 0x103: return print_can_0x103_RAW_Mag(o, output);
+	case 0x104: return print_can_0x104_CAN_Logger_End(o, output);
+	case 0x105: return print_can_0x105_CAN_Logger_Begin(o, output);
 	default: break; 
 	}
 	return -1; 
