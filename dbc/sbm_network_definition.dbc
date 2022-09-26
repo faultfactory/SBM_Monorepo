@@ -34,7 +34,14 @@ NS_ :
 BS_:
 
 BU_: Display_Screen Body_Orientation
+VAL_TABLE_ Logger_Status 1 "End" 0 "Begin" ;
 
+
+BO_ 260 CAN_Logger_End: 8 Display_Screen
+ SG_ CAN_Logger : 0|1@1+ (1,0) [0|1] "" Vector__XXX
+
+BO_ 261 CAN_Logger_Begin: 8 Display_Screen
+ SG_ CAN_Logger : 0|1@1+ (1,0) [0|1] "" Vector__XXX
 
 BO_ 259 RAW_Mag: 8 Body_Orientation
  SG_ Raw_Mag_z_uT : 16|8@1- (1,0) [-128|127] "uTesla"  Display_Screen
