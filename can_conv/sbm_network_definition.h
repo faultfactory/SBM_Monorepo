@@ -107,10 +107,20 @@ z-Axis */
 } POSTPACK can_0x103_RAW_Mag_t;
 
 typedef PREPACK struct {
+	uint8_t CAN_Logger; /* scaling 1.0, offset 0.0, units none  */
+} POSTPACK can_0x104_CAN_Logger_End_t;
+
+typedef PREPACK struct {
+	uint8_t CAN_Logger; /* scaling 1.0, offset 0.0, units none  */
+} POSTPACK can_0x105_CAN_Logger_Begin_t;
+
+typedef PREPACK struct {
 	dbcc_time_stamp_t can_0x100_IMU_time_stamp_rx;
 	dbcc_time_stamp_t can_0x101_GPS_time_stamp_rx;
 	dbcc_time_stamp_t can_0x102_RAW_Accel_Gyro_time_stamp_rx;
 	dbcc_time_stamp_t can_0x103_RAW_Mag_time_stamp_rx;
+	dbcc_time_stamp_t can_0x104_CAN_Logger_End_time_stamp_rx;
+	dbcc_time_stamp_t can_0x105_CAN_Logger_Begin_time_stamp_rx;
 	unsigned can_0x100_IMU_status : 2;
 	unsigned can_0x100_IMU_tx : 1;
 	unsigned can_0x100_IMU_rx : 1;
@@ -123,10 +133,18 @@ typedef PREPACK struct {
 	unsigned can_0x103_RAW_Mag_status : 2;
 	unsigned can_0x103_RAW_Mag_tx : 1;
 	unsigned can_0x103_RAW_Mag_rx : 1;
+	unsigned can_0x104_CAN_Logger_End_status : 2;
+	unsigned can_0x104_CAN_Logger_End_tx : 1;
+	unsigned can_0x104_CAN_Logger_End_rx : 1;
+	unsigned can_0x105_CAN_Logger_Begin_status : 2;
+	unsigned can_0x105_CAN_Logger_Begin_tx : 1;
+	unsigned can_0x105_CAN_Logger_Begin_rx : 1;
 	can_0x100_IMU_t can_0x100_IMU;
 	can_0x101_GPS_t can_0x101_GPS;
 	can_0x102_RAW_Accel_Gyro_t can_0x102_RAW_Accel_Gyro;
 	can_0x103_RAW_Mag_t can_0x103_RAW_Mag;
+	can_0x104_CAN_Logger_End_t can_0x104_CAN_Logger_End;
+	can_0x105_CAN_Logger_Begin_t can_0x105_CAN_Logger_Begin;
 } POSTPACK can_obj_sbm_network_definition_h_t;
 
 int unpack_message(can_obj_sbm_network_definition_h_t *o, const unsigned long id, uint64_t data, uint8_t dlc, dbcc_time_stamp_t time_stamp);
@@ -165,6 +183,14 @@ int decode_can_0x103_Raw_Mag_y_uT(const can_obj_sbm_network_definition_h_t *o, i
 int encode_can_0x103_Raw_Mag_y_uT(can_obj_sbm_network_definition_h_t *o, int8_t in);
 int decode_can_0x103_Raw_Mag_z_uT(const can_obj_sbm_network_definition_h_t *o, int8_t *out);
 int encode_can_0x103_Raw_Mag_z_uT(can_obj_sbm_network_definition_h_t *o, int8_t in);
+
+
+int decode_can_0x104_CAN_Logger(const can_obj_sbm_network_definition_h_t *o, uint8_t *out);
+int encode_can_0x104_CAN_Logger(can_obj_sbm_network_definition_h_t *o, uint8_t in);
+
+
+int decode_can_0x105_CAN_Logger(const can_obj_sbm_network_definition_h_t *o, uint8_t *out);
+int encode_can_0x105_CAN_Logger(can_obj_sbm_network_definition_h_t *o, uint8_t in);
 
 
 #ifdef __cplusplus
