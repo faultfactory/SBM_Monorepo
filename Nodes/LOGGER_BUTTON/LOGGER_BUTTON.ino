@@ -83,7 +83,7 @@ void loop()
     //END DEBUG
   
     /* Button pressed when logger is off */
-    if (buttonDown & !Logger_Read){
+    if (!Logger_Read){
       Logger_Read = true;
       
       Serial.println("Send logger START");
@@ -93,7 +93,7 @@ void loop()
       CAN.endPacket();  
     }
     /* Button pressed when logger is on */
-    else if (buttonDown & Logger_Read){
+    else if (Logger_Read){
       Logger_Read = false;
       
       Serial.println("Send logger STOP");
