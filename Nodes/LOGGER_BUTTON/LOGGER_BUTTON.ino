@@ -7,8 +7,9 @@ can_obj_sbm_network_definition_h_t can_obj;
 millisDelay Button_Press; 
 bool Logger_Read = false;
 int buttonState = 0;
-
 const int buttonPin = 12;
+
+
 
 union MsgData
 {
@@ -27,20 +28,45 @@ void setup() {
   Serial.begin(115200);
   CAN.begin(500000); // start the CAN bus at 500 kbps (kilo-bits/second)
 
-  Button_Press.start(50);
 }
 
-void loop() {
-  if(Button_Press.justFinished())
+void loop() 
+{
+  bool sendCan = false;
+
+  if(digitalRead(buttonPin) == 1)
   {
-    Button_Press.repeat();
-
-    bool buttonDown = false;
-    if (buttonState != digitalRead(buttonPin) && digitalRead(buttonPin) == 1) {
-      buttonDown = true;
+    if(!buttonState)
+    {
+      Button_Press.start(50);
+      buttonState=true;
+    }
+    else
+    {
+      if(Button_Press.justFinished())
+      {
+        sendCan = true;
+      }
+    }
   }
-    buttonState = digitalRead(buttonPin);
-
+  else
+  {
+    if(buttonState)
+    {
+      buttonState = false;
+      Button_Press.finish();      
+    }
+    else
+    {
+      if(Button_Press.isRunning())
+      {
+        Button_Press.finish();
+      }
+    }
+  }
+  
+  if(sendCan)
+  {
     encode_can_0x104_CAN_Logger(&can_obj,1);
     encode_can_0x105_CAN_Logger(&can_obj,1); 
 
