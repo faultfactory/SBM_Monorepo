@@ -4,12 +4,11 @@
 
 can_obj_sbm_network_definition_h_t can_obj;
 
+millisDelay CAN_Send_Delay; 
 millisDelay Button_Press; 
 bool Logger_Read = false;
 int buttonState = 0;
 const int buttonPin = 12;
-
-
 
 union MsgData
 {
@@ -28,60 +27,69 @@ void setup() {
   Serial.begin(115200);
   CAN.begin(500000); // start the CAN bus at 500 kbps (kilo-bits/second)
 
+  CAN_Send_Delay.start(10); //10 ms -> 100 Hz (Receiving 2 messages at 100 Hz, so 200 messages/sec)
 }
 
 void loop() 
 {
-  bool sendCan = false;
-
-  if(digitalRead(buttonPin) == 1)
+  if(CAN_Send_Delay.justFinished()) // Checking the delay on each loops
   {
-    if(!buttonState)
+      // Delay has expired so set it to run again. 
+      // This library does not allow drift and logs the actual expiration time. 
+      CAN_Send_Delay.repeat(); 
+
+    //DEBUG
+    MsgData msg_102;
+    double accel = 5.3;
+    Serial.println(accel);
+    encode_can_0x102_Raw_Accel_x_mps2(&can_obj,accel);
+    pack_message(&can_obj,0x102,&msg_102.a);
+    CAN.beginPacket(0x102,8,false);
+    CAN.write(msg_102.b,8);
+    CAN.endPacket();
+    //END DEBUG
+
+    /* Check if button is pressed down */
+    if(digitalRead(buttonPin) == 1) // Button is being pressed down
     {
-      Button_Press.start(50);
-      buttonState=true;
-    }
-    else
-    {
-      if(Button_Press.justFinished())
+      if(!buttonState) // If button IS NOT already pressed down, start timer
       {
-         sendCAN(can_obj, Logger_Read);
+        Button_Press.start(50);
+        buttonState=true;
+      }
+      else // If button IS already pressed down, check if timer has finished
+      {
+        if(Button_Press.justFinished()) // If timer finished, send CAN data
+        {
+           sendCAN(can_obj, Logger_Read);
+        }
       }
     }
-  }
-  else
-  {
-    if(buttonState)
+    else // Button is not being pressed down
     {
-      buttonState = false;
-      Button_Press.finish();      
-    }
-    else
-    {
-      if(Button_Press.isRunning())
+      if(buttonState) // Set button state to false if not already
       {
-        Button_Press.finish();
+        buttonState = false;
+        Button_Press.finish();      
+      }
+      else // 
+      {
+        if(Button_Press.isRunning()) // If button is lifted before timer is up, finish timer. NO CAN data is sent
+        {
+          Button_Press.finish();
+        }
       }
     }
   }
 }
+
 
 void sendCAN(can_obj_sbm_network_definition_h_t &can_obj, bool &Logger_Read) 
 {
   encode_can_0x104_CAN_Logger(&can_obj,1);
   encode_can_0x105_CAN_Logger(&can_obj,1); 
 
-  MsgData msg_102, msg_104, msg_105;  
-
-  //DEBUG
-  double accel = 5.3;
-  Serial.println(accel);
-  encode_can_0x102_Raw_Accel_x_mps2(&can_obj,accel);
-  pack_message(&can_obj,0x102,&msg_102.a);
-  CAN.beginPacket(0x102,8,false);
-  CAN.write(msg_102.b,8);
-  CAN.endPacket();
-  //END DEBUG
+  MsgData msg_104, msg_105;  
 
   /* Button pressed when logger is off */
   if (!Logger_Read){
