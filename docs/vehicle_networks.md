@@ -39,7 +39,7 @@ An off the shelf data acquisition setup with no network would look something lik
 ![image](high_level_view_w_daq.png)<br>
 All wires tie into a central point. Seems simple enough. However, you have to pick that DAQ carefully and that DAQ device measures what it measures, nothing more. If you want to add more signals, you have to disconnect something. If you find a sensor that looks great but is incompatible, you have to do signal adaptation. Or you have buy another DAQ. Additionally wire runs become cumbersome and faulty. Additionally, without a truly expensive hardware, you have no means of looking at what's happening live, on OR off the car. 
 
-Taking a hypothetical different approach, you'd have something like this (I didn't draw the can lines, I got lazy):
+Taking a hypothetical different approach, you'd have something like this (I didn't draw the can lines, I got lazy):<br>
 ![image](high_level_view_w_can.png)
 
 Consider the blue nodes as the items you intend to run full time. Sensor signals run to node they are closest to and get dropped on the network at their specified sample rate. A logger, shown in yellow can be added to the network can be attached to the bus and log the full traffic. The two red development nodes may include specialized sesnors just for development logging and tuning. When the time comes, the sensors and the nodes are removed and unplugged from the vehicle.
