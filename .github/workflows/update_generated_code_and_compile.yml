@@ -25,17 +25,27 @@ jobs:
         # Checkout as many commits as needed for the diff
         fetch-depth: 0 # this gets all commits
     - shell: pwsh
-      id: check_file_changed
+      id: check_file_changed 
       run: |
-        # Diff HEAD with the last commit pushed
-        $diff = git diff --name-only ${{github.event.before}} ${{github.event.after}}
+        # Using this to protect against the first commit of a new branch on this weird github environment
+        $bad_hash = "0000000000000000000000000000000000000000"
+        if("${{github.event.before}}" -ne $bad_hash)
+        {
+          # Diff HEAD with the last commit pushed
+          $diff = git diff --name-only ${{github.event.before}} ${{github.event.after}}
 
-        # Check if a file under dbc/ or with the .dbc extension has changed (added, modified, deleted)
-        $SourceDiff = $diff | Where-Object { $_ -match '^dbc/' -or $_ -match '.dbc$' }
-        $HasDiff = $SourceDiff.Length -gt 0
+          # Check if a file under dbc/ or with the .dbc extension has changed (added, modified, deleted)
+          $SourceDiff = $diff | Where-Object { $_ -match '^dbc/' -or $_ -match '.dbc$' }
+          $HasDiff = $SourceDiff.Length -gt 0
 
-        # Set the output named "dbc_changed"
-        Write-Host "::set-output name=dbc_changed::$HasDiff"
+          # Set the output named "dbc_changed"
+          Write-Host "::set-output name=dbc_changed::$HasDiff"
+        }
+        # if this is the first commit trigger the build anyway. it's only one wasted run. 
+        if("${{github.event.before}}" -eq "0000000000000000000000000000000000000000")
+        {
+          Write-Host "::set-output name=dbc_changed::$true"
+        }
  generate_c_interface:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
