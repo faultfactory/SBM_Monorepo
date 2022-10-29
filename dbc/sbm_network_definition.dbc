@@ -33,9 +33,13 @@ NS_ :
 
 BS_:
 
-BU_: Display_Screen Body_Orientation
+BU_: Front_Node Display_Screen Body_Orientation
 VAL_TABLE_ Logger_Status 1 "End" 0 "Begin" ;
 
+
+BO_ 153 Brake_Pressures: 4 Front_Node
+ SG_ FR_Press_psi : 16|16@1- (0.1,0) [-3276.8|3276.7] "" Vector__XXX
+ SG_ FL_Press_psi : 0|16@1- (0.1,0) [-3276.8|3276.7] "" Vector__XXX
 
 BO_ 260 CAN_Logger_End: 8 Display_Screen
  SG_ CAN_Logger : 0|1@1+ (1,0) [0|1] "" Vector__XXX
