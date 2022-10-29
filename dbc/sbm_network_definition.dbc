@@ -33,8 +33,23 @@ NS_ :
 
 BS_:
 
-BU_: Display_Screen Body_Orientation
+BU_: Front_Node Display_Screen Body_Orientation
+VAL_TABLE_ Logger_Status 1 "End" 0 "Begin" ;
 
+
+BO_ 152 Wheel_Speeds: 4 Front_Node
+ SG_ FR_Wheelspeed_rpm : 16|16@1+ (0.1,0) [0|6553.5] "rpm"  Display_Screen
+ SG_ FL_Wheelspeed_rpm : 0|16@1+ (0.1,0) [0|6553.5] "rpm"  Display_Screen
+
+BO_ 153 Brake_Pressures: 4 Front_Node
+ SG_ FR_Press_psi : 16|16@1- (0.1,0) [-3276.8|3276.7] "psi"  Display_Screen
+ SG_ FL_Press_psi : 0|16@1- (0.1,0) [-3276.8|3276.7] "psi"  Display_Screen
+
+BO_ 260 CAN_Logger_End: 8 Display_Screen
+ SG_ CAN_Logger : 0|1@1+ (1,0) [0|1] "" Vector__XXX
+
+BO_ 261 CAN_Logger_Begin: 8 Display_Screen
+ SG_ CAN_Logger : 0|1@1+ (1,0) [0|1] "" Vector__XXX
 
 BO_ 259 RAW_Mag: 8 Body_Orientation
  SG_ Raw_Mag_z_uT : 16|8@1- (1,0) [-128|127] "uTesla"  Display_Screen
