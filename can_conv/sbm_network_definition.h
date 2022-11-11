@@ -33,9 +33,23 @@ typedef enum {
 #endif
 
 typedef PREPACK struct {
+	int16_t Steering_Input_deg; /* scaling 1.0, offset 0.0, units deg  */
+	/* Throttle_Input_pct: Normalized, goes from 0 to 100%
+Resolution of 0.1 for smoother reading of input */
+	/* scaling 0.1, offset 0.0, units percent  */
+	uint16_t Throttle_Input_pct;
+	uint16_t Brake_Input_lbf; /* scaling 1.0, offset 0.0, units lbf  */
+} POSTPACK can_0x096_Driver_Inputs_t;
+
+typedef PREPACK struct {
+	uint16_t RL_Wheelspeed_rpm; /* scaling 0.1, offset 0.0, units rpm  */
+	uint16_t RR_Wheelspeed_rpm; /* scaling 0.1, offset 0.0, units rpm  */
+} POSTPACK can_0x097_Rear_Wheel_Speeds_t;
+
+typedef PREPACK struct {
 	uint16_t FL_Wheelspeed_rpm; /* scaling 0.1, offset 0.0, units rpm  */
 	uint16_t FR_Wheelspeed_rpm; /* scaling 0.1, offset 0.0, units rpm  */
-} POSTPACK can_0x098_Wheel_Speeds_t;
+} POSTPACK can_0x098_Front_Wheel_Speeds_t;
 
 typedef PREPACK struct {
 	int16_t FL_Press_psi; /* scaling 0.1, offset 0.0, units psi  */
@@ -125,7 +139,9 @@ typedef PREPACK struct {
 } POSTPACK can_0x105_CAN_Logger_Begin_t;
 
 typedef PREPACK struct {
-	dbcc_time_stamp_t can_0x098_Wheel_Speeds_time_stamp_rx;
+	dbcc_time_stamp_t can_0x096_Driver_Inputs_time_stamp_rx;
+	dbcc_time_stamp_t can_0x097_Rear_Wheel_Speeds_time_stamp_rx;
+	dbcc_time_stamp_t can_0x098_Front_Wheel_Speeds_time_stamp_rx;
 	dbcc_time_stamp_t can_0x099_Brake_Pressures_time_stamp_rx;
 	dbcc_time_stamp_t can_0x100_IMU_time_stamp_rx;
 	dbcc_time_stamp_t can_0x101_GPS_time_stamp_rx;
@@ -133,9 +149,15 @@ typedef PREPACK struct {
 	dbcc_time_stamp_t can_0x103_RAW_Mag_time_stamp_rx;
 	dbcc_time_stamp_t can_0x104_CAN_Logger_End_time_stamp_rx;
 	dbcc_time_stamp_t can_0x105_CAN_Logger_Begin_time_stamp_rx;
-	unsigned can_0x098_Wheel_Speeds_status : 2;
-	unsigned can_0x098_Wheel_Speeds_tx : 1;
-	unsigned can_0x098_Wheel_Speeds_rx : 1;
+	unsigned can_0x096_Driver_Inputs_status : 2;
+	unsigned can_0x096_Driver_Inputs_tx : 1;
+	unsigned can_0x096_Driver_Inputs_rx : 1;
+	unsigned can_0x097_Rear_Wheel_Speeds_status : 2;
+	unsigned can_0x097_Rear_Wheel_Speeds_tx : 1;
+	unsigned can_0x097_Rear_Wheel_Speeds_rx : 1;
+	unsigned can_0x098_Front_Wheel_Speeds_status : 2;
+	unsigned can_0x098_Front_Wheel_Speeds_tx : 1;
+	unsigned can_0x098_Front_Wheel_Speeds_rx : 1;
 	unsigned can_0x099_Brake_Pressures_status : 2;
 	unsigned can_0x099_Brake_Pressures_tx : 1;
 	unsigned can_0x099_Brake_Pressures_rx : 1;
@@ -157,7 +179,9 @@ typedef PREPACK struct {
 	unsigned can_0x105_CAN_Logger_Begin_status : 2;
 	unsigned can_0x105_CAN_Logger_Begin_tx : 1;
 	unsigned can_0x105_CAN_Logger_Begin_rx : 1;
-	can_0x098_Wheel_Speeds_t can_0x098_Wheel_Speeds;
+	can_0x096_Driver_Inputs_t can_0x096_Driver_Inputs;
+	can_0x097_Rear_Wheel_Speeds_t can_0x097_Rear_Wheel_Speeds;
+	can_0x098_Front_Wheel_Speeds_t can_0x098_Front_Wheel_Speeds;
 	can_0x099_Brake_Pressures_t can_0x099_Brake_Pressures;
 	can_0x100_IMU_t can_0x100_IMU;
 	can_0x101_GPS_t can_0x101_GPS;
@@ -170,6 +194,20 @@ typedef PREPACK struct {
 int unpack_message(can_obj_sbm_network_definition_h_t *o, const unsigned long id, uint64_t data, uint8_t dlc, dbcc_time_stamp_t time_stamp);
 int pack_message(can_obj_sbm_network_definition_h_t *o, const unsigned long id, uint64_t *data);
 int print_message(const can_obj_sbm_network_definition_h_t *o, const unsigned long id, FILE *output);
+
+int decode_can_0x096_Steering_Input_deg(const can_obj_sbm_network_definition_h_t *o, int16_t *out);
+int encode_can_0x096_Steering_Input_deg(can_obj_sbm_network_definition_h_t *o, int16_t in);
+int decode_can_0x096_Throttle_Input_pct(const can_obj_sbm_network_definition_h_t *o, double *out);
+int encode_can_0x096_Throttle_Input_pct(can_obj_sbm_network_definition_h_t *o, double in);
+int decode_can_0x096_Brake_Input_lbf(const can_obj_sbm_network_definition_h_t *o, uint16_t *out);
+int encode_can_0x096_Brake_Input_lbf(can_obj_sbm_network_definition_h_t *o, uint16_t in);
+
+
+int decode_can_0x097_RL_Wheelspeed_rpm(const can_obj_sbm_network_definition_h_t *o, double *out);
+int encode_can_0x097_RL_Wheelspeed_rpm(can_obj_sbm_network_definition_h_t *o, double in);
+int decode_can_0x097_RR_Wheelspeed_rpm(const can_obj_sbm_network_definition_h_t *o, double *out);
+int encode_can_0x097_RR_Wheelspeed_rpm(can_obj_sbm_network_definition_h_t *o, double in);
+
 
 int decode_can_0x098_FL_Wheelspeed_rpm(const can_obj_sbm_network_definition_h_t *o, double *out);
 int encode_can_0x098_FL_Wheelspeed_rpm(can_obj_sbm_network_definition_h_t *o, double in);
