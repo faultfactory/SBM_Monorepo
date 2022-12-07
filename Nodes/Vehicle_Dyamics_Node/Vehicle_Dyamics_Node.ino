@@ -124,16 +124,16 @@ void loop()
 //    /* DEBUG PRINT LINES */
     #if SERIAL_DEBUG_PRINTS_ON
     // Acceleration data
-    Serial.print(accelX);Serial.print(" ");
-    Serial.print(accelY);Serial.print(" ");
-    Serial.print(accelZ);Serial.print(" ");
+    Serial.print(accelX);Serial.print(",");
+    Serial.print(accelY);Serial.print(",");
+    Serial.print(accelZ);Serial.print(",");
     // Gyroscope data
-    Serial.print(gyroX);Serial.print(" ");
-    Serial.print(gyroY);Serial.print(" ");
-    Serial.print(gyroZ);Serial.print(" ");
+    Serial.print(gyroX);Serial.print(",");
+    Serial.print(gyroY);Serial.print(",");
+    Serial.print(gyroZ);Serial.print(",");
     // Magnetometer data
-    Serial.print(magX);Serial.print(" ");
-    Serial.print(magY);Serial.print(" ");
+    Serial.print(magX);Serial.print(",");
+    Serial.print(magY);Serial.print(",");
     Serial.println(magZ);
     #endif
     /**********************************************************************************************/

@@ -27,6 +27,9 @@ const int analogInput1 = A0; //Analog input pin for pressure transducer #1
 const int analogInput2 = A1; //Analog input pin for pressure transducer #2
 const int resolution = 1024; //The arduino's analog voltage reading resolution in total units
 
+// Steering sensor pins
+const int analogInput3 = A2; // Analog input pin for rotary multi-turn pot
+
 // Transducer variables
 const int numTrans = 2; //Number of transducers used
 const float Vsupply = 3.0; //(V), Voltage supplied
@@ -42,6 +45,9 @@ float Papplied[numTrans]; //Calcualted pressure applied
 float Vfilter[numTrans];
 float Pfilter[numTrans];
 float aLPF = 0.9; // Low pass filter weight
+
+// Steering
+float steerRaw, steerVal;
 
 // Calibration button variables
 int buttonState = 0;
@@ -122,6 +128,9 @@ void loop()
     anagIn[0] = analogRead(analogInput1);
     anagIn[1] = analogRead(analogInput2);
     
+    steerRaw = analogRead(analogInput3);
+    steerVal = map(steerRaw,182,1003,0,270);
+    
     // FILTER TESTING
     for (int i = 0; i < numTrans; i++) {
       Vfilter[i] = aLPF*Vfilter[i] + (1 - aLPF)*anagIn[i]; // Low pass filter (Voltage)
@@ -179,9 +188,11 @@ void loop()
      display.setCursor(0,0); display.println("Front:"); display.setCursor(85,0); display.println("psi");
      display.setCursor(0,10); display.println("Rear:"); display.setCursor(85,10); display.println("psi");
      display.setCursor(0,20); display.println("Bias:"); display.setCursor(85,20); display.println("%");
+     display.setCursor(0,30); display.println("Steer:"); display.setCursor(85,30); display.println("deg");
      display.setCursor(40,0); display.println(Papplied[0]);
      display.setCursor(40,10); display.println(Papplied[1]);
      display.setCursor(40,20); display.println((Papplied[0]/(Papplied[0] + Papplied[1]))*100);
+     display.setCursor(40,30); display.println(steerRaw);
      display.display();  
      /**********************************************************************************************/
      // PRESSURE TRANSDUCER DATA
