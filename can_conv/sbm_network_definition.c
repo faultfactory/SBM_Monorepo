@@ -16,45 +16,242 @@ static inline int print_helper(int r, int print_return_value) {
 	return ((r >= 0) && (print_return_value >= 0)) ? r + print_return_value : -1;
 }
 
-static int pack_can_0x098_Wheel_Speeds(can_obj_sbm_network_definition_h_t *o, uint64_t *data) {
+static int pack_can_0x096_Driver_Inputs(can_obj_sbm_network_definition_h_t *o, uint64_t *data) {
+	assert(o);
+	assert(data);
+	register uint64_t x;
+	register uint64_t i = 0;
+	/* Steering_Input_deg: start-bit 16, length 11, endianess intel, scaling 1, offset 0 */
+	x = ((uint16_t)(o->can_0x096_Driver_Inputs.Steering_Input_deg)) & 0x7ff;
+	x <<= 16; 
+	i |= x;
+	/* Throttle_Input_pct: start-bit 32, length 10, endianess intel, scaling 0.1, offset 0 */
+	x = ((uint16_t)(o->can_0x096_Driver_Inputs.Throttle_Input_pct)) & 0x3ff;
+	x <<= 32; 
+	i |= x;
+	/* Brake_Input_lbf: start-bit 0, length 9, endianess intel, scaling 1, offset 0 */
+	x = ((uint16_t)(o->can_0x096_Driver_Inputs.Brake_Input_lbf)) & 0x1ff;
+	i |= x;
+	*data = (i);
+	o->can_0x096_Driver_Inputs_tx = 1;
+	return 0;
+}
+
+static int unpack_can_0x096_Driver_Inputs(can_obj_sbm_network_definition_h_t *o, uint64_t data, uint8_t dlc, dbcc_time_stamp_t time_stamp) {
+	assert(o);
+	assert(dlc <= 8);
+	register uint64_t x;
+	register uint64_t i = (data);
+	if (dlc < 8)
+		return -1;
+	/* Steering_Input_deg: start-bit 16, length 11, endianess intel, scaling 1, offset 0 */
+	x = (i >> 16) & 0x7ff;
+	x = (x & 0x400) ? (x | 0xf800) : x; 
+	o->can_0x096_Driver_Inputs.Steering_Input_deg = x;
+	/* Throttle_Input_pct: start-bit 32, length 10, endianess intel, scaling 0.1, offset 0 */
+	x = (i >> 32) & 0x3ff;
+	o->can_0x096_Driver_Inputs.Throttle_Input_pct = x;
+	/* Brake_Input_lbf: start-bit 0, length 9, endianess intel, scaling 1, offset 0 */
+	x = i & 0x1ff;
+	o->can_0x096_Driver_Inputs.Brake_Input_lbf = x;
+	o->can_0x096_Driver_Inputs_rx = 1;
+	o->can_0x096_Driver_Inputs_time_stamp_rx = time_stamp;
+	return 0;
+}
+
+int decode_can_0x096_Steering_Input_deg(const can_obj_sbm_network_definition_h_t *o, int16_t *out) {
+	assert(o);
+	assert(out);
+	int16_t rval = (int16_t)(o->can_0x096_Driver_Inputs.Steering_Input_deg);
+	*out = rval;
+	return 0;
+}
+
+int encode_can_0x096_Steering_Input_deg(can_obj_sbm_network_definition_h_t *o, int16_t in) {
+	assert(o);
+	o->can_0x096_Driver_Inputs.Steering_Input_deg = in;
+	return 0;
+}
+
+int decode_can_0x096_Throttle_Input_pct(const can_obj_sbm_network_definition_h_t *o, double *out) {
+	assert(o);
+	assert(out);
+	double rval = (double)(o->can_0x096_Driver_Inputs.Throttle_Input_pct);
+	rval *= 0.1;
+	if (rval <= 102.3) {
+		*out = rval;
+		return 0;
+	} else {
+		*out = (double)0;
+		return -1;
+	}
+}
+
+int encode_can_0x096_Throttle_Input_pct(can_obj_sbm_network_definition_h_t *o, double in) {
+	assert(o);
+	o->can_0x096_Driver_Inputs.Throttle_Input_pct = 0;
+	if (in > 102.3)
+		return -1;
+	in *= 10;
+	o->can_0x096_Driver_Inputs.Throttle_Input_pct = in;
+	return 0;
+}
+
+int decode_can_0x096_Brake_Input_lbf(const can_obj_sbm_network_definition_h_t *o, uint16_t *out) {
+	assert(o);
+	assert(out);
+	uint16_t rval = (uint16_t)(o->can_0x096_Driver_Inputs.Brake_Input_lbf);
+	*out = rval;
+	return 0;
+}
+
+int encode_can_0x096_Brake_Input_lbf(can_obj_sbm_network_definition_h_t *o, uint16_t in) {
+	assert(o);
+	o->can_0x096_Driver_Inputs.Brake_Input_lbf = in;
+	return 0;
+}
+
+int print_can_0x096_Driver_Inputs(const can_obj_sbm_network_definition_h_t *o, FILE *output) {
+	assert(o);
+	assert(output);
+	int r = 0;
+	r = print_helper(r, fprintf(output, "Steering_Input_deg = (wire: %.0f)\n", (double)(o->can_0x096_Driver_Inputs.Steering_Input_deg)));
+	r = print_helper(r, fprintf(output, "Throttle_Input_pct = (wire: %.0f)\n", (double)(o->can_0x096_Driver_Inputs.Throttle_Input_pct)));
+	r = print_helper(r, fprintf(output, "Brake_Input_lbf = (wire: %.0f)\n", (double)(o->can_0x096_Driver_Inputs.Brake_Input_lbf)));
+	return r;
+}
+
+static int pack_can_0x097_Rear_Wheel_Speeds(can_obj_sbm_network_definition_h_t *o, uint64_t *data) {
+	assert(o);
+	assert(data);
+	register uint64_t x;
+	register uint64_t i = 0;
+	/* RL_Wheelspeed_rpm: start-bit 0, length 16, endianess intel, scaling 0.1, offset 0 */
+	x = ((uint16_t)(o->can_0x097_Rear_Wheel_Speeds.RL_Wheelspeed_rpm)) & 0xffff;
+	i |= x;
+	/* RR_Wheelspeed_rpm: start-bit 16, length 16, endianess intel, scaling 0.1, offset 0 */
+	x = ((uint16_t)(o->can_0x097_Rear_Wheel_Speeds.RR_Wheelspeed_rpm)) & 0xffff;
+	x <<= 16; 
+	i |= x;
+	*data = (i);
+	o->can_0x097_Rear_Wheel_Speeds_tx = 1;
+	return 0;
+}
+
+static int unpack_can_0x097_Rear_Wheel_Speeds(can_obj_sbm_network_definition_h_t *o, uint64_t data, uint8_t dlc, dbcc_time_stamp_t time_stamp) {
+	assert(o);
+	assert(dlc <= 8);
+	register uint64_t x;
+	register uint64_t i = (data);
+	if (dlc < 8)
+		return -1;
+	/* RL_Wheelspeed_rpm: start-bit 0, length 16, endianess intel, scaling 0.1, offset 0 */
+	x = i & 0xffff;
+	o->can_0x097_Rear_Wheel_Speeds.RL_Wheelspeed_rpm = x;
+	/* RR_Wheelspeed_rpm: start-bit 16, length 16, endianess intel, scaling 0.1, offset 0 */
+	x = (i >> 16) & 0xffff;
+	o->can_0x097_Rear_Wheel_Speeds.RR_Wheelspeed_rpm = x;
+	o->can_0x097_Rear_Wheel_Speeds_rx = 1;
+	o->can_0x097_Rear_Wheel_Speeds_time_stamp_rx = time_stamp;
+	return 0;
+}
+
+int decode_can_0x097_RL_Wheelspeed_rpm(const can_obj_sbm_network_definition_h_t *o, double *out) {
+	assert(o);
+	assert(out);
+	double rval = (double)(o->can_0x097_Rear_Wheel_Speeds.RL_Wheelspeed_rpm);
+	rval *= 0.1;
+	if (rval <= 6553.5) {
+		*out = rval;
+		return 0;
+	} else {
+		*out = (double)0;
+		return -1;
+	}
+}
+
+int encode_can_0x097_RL_Wheelspeed_rpm(can_obj_sbm_network_definition_h_t *o, double in) {
+	assert(o);
+	o->can_0x097_Rear_Wheel_Speeds.RL_Wheelspeed_rpm = 0;
+	if (in > 6553.5)
+		return -1;
+	in *= 10;
+	o->can_0x097_Rear_Wheel_Speeds.RL_Wheelspeed_rpm = in;
+	return 0;
+}
+
+int decode_can_0x097_RR_Wheelspeed_rpm(const can_obj_sbm_network_definition_h_t *o, double *out) {
+	assert(o);
+	assert(out);
+	double rval = (double)(o->can_0x097_Rear_Wheel_Speeds.RR_Wheelspeed_rpm);
+	rval *= 0.1;
+	if (rval <= 6553.5) {
+		*out = rval;
+		return 0;
+	} else {
+		*out = (double)0;
+		return -1;
+	}
+}
+
+int encode_can_0x097_RR_Wheelspeed_rpm(can_obj_sbm_network_definition_h_t *o, double in) {
+	assert(o);
+	o->can_0x097_Rear_Wheel_Speeds.RR_Wheelspeed_rpm = 0;
+	if (in > 6553.5)
+		return -1;
+	in *= 10;
+	o->can_0x097_Rear_Wheel_Speeds.RR_Wheelspeed_rpm = in;
+	return 0;
+}
+
+int print_can_0x097_Rear_Wheel_Speeds(const can_obj_sbm_network_definition_h_t *o, FILE *output) {
+	assert(o);
+	assert(output);
+	int r = 0;
+	r = print_helper(r, fprintf(output, "RL_Wheelspeed_rpm = (wire: %.0f)\n", (double)(o->can_0x097_Rear_Wheel_Speeds.RL_Wheelspeed_rpm)));
+	r = print_helper(r, fprintf(output, "RR_Wheelspeed_rpm = (wire: %.0f)\n", (double)(o->can_0x097_Rear_Wheel_Speeds.RR_Wheelspeed_rpm)));
+	return r;
+}
+
+static int pack_can_0x098_Front_Wheel_Speeds(can_obj_sbm_network_definition_h_t *o, uint64_t *data) {
 	assert(o);
 	assert(data);
 	register uint64_t x;
 	register uint64_t i = 0;
 	/* FL_Wheelspeed_rpm: start-bit 0, length 16, endianess intel, scaling 0.1, offset 0 */
-	x = ((uint16_t)(o->can_0x098_Wheel_Speeds.FL_Wheelspeed_rpm)) & 0xffff;
+	x = ((uint16_t)(o->can_0x098_Front_Wheel_Speeds.FL_Wheelspeed_rpm)) & 0xffff;
 	i |= x;
 	/* FR_Wheelspeed_rpm: start-bit 16, length 16, endianess intel, scaling 0.1, offset 0 */
-	x = ((uint16_t)(o->can_0x098_Wheel_Speeds.FR_Wheelspeed_rpm)) & 0xffff;
+	x = ((uint16_t)(o->can_0x098_Front_Wheel_Speeds.FR_Wheelspeed_rpm)) & 0xffff;
 	x <<= 16; 
 	i |= x;
 	*data = (i);
-	o->can_0x098_Wheel_Speeds_tx = 1;
+	o->can_0x098_Front_Wheel_Speeds_tx = 1;
 	return 0;
 }
 
-static int unpack_can_0x098_Wheel_Speeds(can_obj_sbm_network_definition_h_t *o, uint64_t data, uint8_t dlc, dbcc_time_stamp_t time_stamp) {
+static int unpack_can_0x098_Front_Wheel_Speeds(can_obj_sbm_network_definition_h_t *o, uint64_t data, uint8_t dlc, dbcc_time_stamp_t time_stamp) {
 	assert(o);
 	assert(dlc <= 8);
 	register uint64_t x;
 	register uint64_t i = (data);
-	if (dlc < 4)
+	if (dlc < 8)
 		return -1;
 	/* FL_Wheelspeed_rpm: start-bit 0, length 16, endianess intel, scaling 0.1, offset 0 */
 	x = i & 0xffff;
-	o->can_0x098_Wheel_Speeds.FL_Wheelspeed_rpm = x;
+	o->can_0x098_Front_Wheel_Speeds.FL_Wheelspeed_rpm = x;
 	/* FR_Wheelspeed_rpm: start-bit 16, length 16, endianess intel, scaling 0.1, offset 0 */
 	x = (i >> 16) & 0xffff;
-	o->can_0x098_Wheel_Speeds.FR_Wheelspeed_rpm = x;
-	o->can_0x098_Wheel_Speeds_rx = 1;
-	o->can_0x098_Wheel_Speeds_time_stamp_rx = time_stamp;
+	o->can_0x098_Front_Wheel_Speeds.FR_Wheelspeed_rpm = x;
+	o->can_0x098_Front_Wheel_Speeds_rx = 1;
+	o->can_0x098_Front_Wheel_Speeds_time_stamp_rx = time_stamp;
 	return 0;
 }
 
 int decode_can_0x098_FL_Wheelspeed_rpm(const can_obj_sbm_network_definition_h_t *o, double *out) {
 	assert(o);
 	assert(out);
-	double rval = (double)(o->can_0x098_Wheel_Speeds.FL_Wheelspeed_rpm);
+	double rval = (double)(o->can_0x098_Front_Wheel_Speeds.FL_Wheelspeed_rpm);
 	rval *= 0.1;
 	if (rval <= 6553.5) {
 		*out = rval;
@@ -67,18 +264,18 @@ int decode_can_0x098_FL_Wheelspeed_rpm(const can_obj_sbm_network_definition_h_t 
 
 int encode_can_0x098_FL_Wheelspeed_rpm(can_obj_sbm_network_definition_h_t *o, double in) {
 	assert(o);
-	o->can_0x098_Wheel_Speeds.FL_Wheelspeed_rpm = 0;
+	o->can_0x098_Front_Wheel_Speeds.FL_Wheelspeed_rpm = 0;
 	if (in > 6553.5)
 		return -1;
 	in *= 10;
-	o->can_0x098_Wheel_Speeds.FL_Wheelspeed_rpm = in;
+	o->can_0x098_Front_Wheel_Speeds.FL_Wheelspeed_rpm = in;
 	return 0;
 }
 
 int decode_can_0x098_FR_Wheelspeed_rpm(const can_obj_sbm_network_definition_h_t *o, double *out) {
 	assert(o);
 	assert(out);
-	double rval = (double)(o->can_0x098_Wheel_Speeds.FR_Wheelspeed_rpm);
+	double rval = (double)(o->can_0x098_Front_Wheel_Speeds.FR_Wheelspeed_rpm);
 	rval *= 0.1;
 	if (rval <= 6553.5) {
 		*out = rval;
@@ -91,20 +288,20 @@ int decode_can_0x098_FR_Wheelspeed_rpm(const can_obj_sbm_network_definition_h_t 
 
 int encode_can_0x098_FR_Wheelspeed_rpm(can_obj_sbm_network_definition_h_t *o, double in) {
 	assert(o);
-	o->can_0x098_Wheel_Speeds.FR_Wheelspeed_rpm = 0;
+	o->can_0x098_Front_Wheel_Speeds.FR_Wheelspeed_rpm = 0;
 	if (in > 6553.5)
 		return -1;
 	in *= 10;
-	o->can_0x098_Wheel_Speeds.FR_Wheelspeed_rpm = in;
+	o->can_0x098_Front_Wheel_Speeds.FR_Wheelspeed_rpm = in;
 	return 0;
 }
 
-int print_can_0x098_Wheel_Speeds(const can_obj_sbm_network_definition_h_t *o, FILE *output) {
+int print_can_0x098_Front_Wheel_Speeds(const can_obj_sbm_network_definition_h_t *o, FILE *output) {
 	assert(o);
 	assert(output);
 	int r = 0;
-	r = print_helper(r, fprintf(output, "FL_Wheelspeed_rpm = (wire: %.0f)\n", (double)(o->can_0x098_Wheel_Speeds.FL_Wheelspeed_rpm)));
-	r = print_helper(r, fprintf(output, "FR_Wheelspeed_rpm = (wire: %.0f)\n", (double)(o->can_0x098_Wheel_Speeds.FR_Wheelspeed_rpm)));
+	r = print_helper(r, fprintf(output, "FL_Wheelspeed_rpm = (wire: %.0f)\n", (double)(o->can_0x098_Front_Wheel_Speeds.FL_Wheelspeed_rpm)));
+	r = print_helper(r, fprintf(output, "FR_Wheelspeed_rpm = (wire: %.0f)\n", (double)(o->can_0x098_Front_Wheel_Speeds.FR_Wheelspeed_rpm)));
 	return r;
 }
 
@@ -130,7 +327,7 @@ static int unpack_can_0x099_Brake_Pressures(can_obj_sbm_network_definition_h_t *
 	assert(dlc <= 8);
 	register uint64_t x;
 	register uint64_t i = (data);
-	if (dlc < 4)
+	if (dlc < 8)
 		return -1;
 	/* FL_Press_psi: start-bit 0, length 16, endianess intel, scaling 0.1, offset 0 */
 	x = i & 0xffff;
@@ -822,7 +1019,9 @@ int unpack_message(can_obj_sbm_network_definition_h_t *o, const unsigned long id
 	assert(id < (1ul << 29)); /* 29-bit CAN ID is largest possible */
 	assert(dlc <= 8);         /* Maximum of 8 bytes in a CAN packet */
 	switch (id) {
-	case 0x098: return unpack_can_0x098_Wheel_Speeds(o, data, dlc, time_stamp);
+	case 0x096: return unpack_can_0x096_Driver_Inputs(o, data, dlc, time_stamp);
+	case 0x097: return unpack_can_0x097_Rear_Wheel_Speeds(o, data, dlc, time_stamp);
+	case 0x098: return unpack_can_0x098_Front_Wheel_Speeds(o, data, dlc, time_stamp);
 	case 0x099: return unpack_can_0x099_Brake_Pressures(o, data, dlc, time_stamp);
 	case 0x100: return unpack_can_0x100_IMU(o, data, dlc, time_stamp);
 	case 0x101: return unpack_can_0x101_GPS(o, data, dlc, time_stamp);
@@ -839,7 +1038,9 @@ int pack_message(can_obj_sbm_network_definition_h_t *o, const unsigned long id, 
 	assert(o);
 	assert(id < (1ul << 29)); /* 29-bit CAN ID is largest possible */
 	switch (id) {
-	case 0x098: return pack_can_0x098_Wheel_Speeds(o, data);
+	case 0x096: return pack_can_0x096_Driver_Inputs(o, data);
+	case 0x097: return pack_can_0x097_Rear_Wheel_Speeds(o, data);
+	case 0x098: return pack_can_0x098_Front_Wheel_Speeds(o, data);
 	case 0x099: return pack_can_0x099_Brake_Pressures(o, data);
 	case 0x100: return pack_can_0x100_IMU(o, data);
 	case 0x101: return pack_can_0x101_GPS(o, data);
@@ -857,7 +1058,9 @@ int print_message(const can_obj_sbm_network_definition_h_t *o, const unsigned lo
 	assert(id < (1ul << 29)); /* 29-bit CAN ID is largest possible */
 	assert(output);
 	switch (id) {
-	case 0x098: return print_can_0x098_Wheel_Speeds(o, output);
+	case 0x096: return print_can_0x096_Driver_Inputs(o, output);
+	case 0x097: return print_can_0x097_Rear_Wheel_Speeds(o, output);
+	case 0x098: return print_can_0x098_Front_Wheel_Speeds(o, output);
 	case 0x099: return print_can_0x099_Brake_Pressures(o, output);
 	case 0x100: return print_can_0x100_IMU(o, output);
 	case 0x101: return print_can_0x101_GPS(o, output);

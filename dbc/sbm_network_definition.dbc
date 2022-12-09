@@ -33,15 +33,24 @@ NS_ :
 
 BS_:
 
-BU_: Front_Node Display_Screen Body_Orientation
+BU_: Rear_Node Front_Node Display_Screen Body_Orientation
 VAL_TABLE_ Logger_Status 1 "End" 0 "Begin" ;
 
 
-BO_ 152 Wheel_Speeds: 4 Front_Node
+BO_ 151 Rear_Wheel_Speeds: 8 Rear_Node
+ SG_ RR_Wheelspeed_rpm : 16|16@1+ (0.1,0) [0|6553.5] "rpm"  Display_Screen
+ SG_ RL_Wheelspeed_rpm : 0|16@1+ (0.1,0) [0|6553.5] "rpm"  Display_Screen
+
+BO_ 150 Driver_Inputs: 8 Front_Node
+ SG_ Throttle_Input_pct : 32|10@1+ (0.1,0) [0|102.3] "percent" Vector__XXX
+ SG_ Steering_Input_deg : 16|11@1- (1,0) [-1024|1023] "deg"  Display_Screen
+ SG_ Brake_Input_lbf : 0|9@1+ (1,0) [0|511] "lbf"  Display_Screen
+
+BO_ 152 Front_Wheel_Speeds: 8 Front_Node
  SG_ FR_Wheelspeed_rpm : 16|16@1+ (0.1,0) [0|6553.5] "rpm"  Display_Screen
  SG_ FL_Wheelspeed_rpm : 0|16@1+ (0.1,0) [0|6553.5] "rpm"  Display_Screen
 
-BO_ 153 Brake_Pressures: 4 Front_Node
+BO_ 153 Brake_Pressures: 8 Front_Node
  SG_ FR_Press_psi : 16|16@1- (0.1,0) [-3276.8|3276.7] "psi"  Display_Screen
  SG_ FL_Press_psi : 0|16@1- (0.1,0) [-3276.8|3276.7] "psi"  Display_Screen
 
@@ -74,6 +83,8 @@ BO_ 256 IMU: 8 Body_Orientation
 
 
 
+CM_ SG_ 150 Throttle_Input_pct "Normalized, goes from 0 to 100%
+Resolution of 0.1 for smoother reading of input";
 CM_ SG_ 259 Raw_Mag_z_uT "Raw magnetic field data from magnetometer (microTesla)
 z-Axis";
 CM_ SG_ 259 Raw_Mag_y_uT "Raw magnetic field data from magnetometer (microTesla)

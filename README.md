@@ -13,13 +13,15 @@ To lower the barrier of entry and to make 'first year' execution simpler, this i
 
 I'd like to eventually be transferring this to the ```stonybrookmotorsports``` github organization. Just want to continue making helpful tweaks and documentation updates without restriction for a while. Feel free to dabble.
 
-### [Thoughts on why this may sense for career development and the team's future](docs/vehicle_networks.md)
+### [Thoughts on why this may sense for career development and the team's future.](docs/vehicle_networks.md)
 
 ### [Some basic SW development concepts and tools relevant to this repo.](docs/crash_course.md)
 
 ### [How to set up and use this repository as it is configured.](docs/using_this_repo.md)
 
 ### [Useful information on navigating and leveraging GitHub.](docs/github_magic.md)
+
+### [Useful textbooks.](https://drive.google.com/drive/u/0/folders/1wXHaC0d-mO1E_1IGiEWTY10UFxmAqdf4)
 
 
 # ```TODOs```:

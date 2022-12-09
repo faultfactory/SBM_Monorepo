@@ -5,13 +5,15 @@
 #include <Adafruit_LSM6DSOX.h>
 #include <Adafruit_LIS3MDL.h>
 #include "src/can_conv/sbm_network_definition.h"
-#define SERIAL_DEBUG_PRINTS_ON 0
+#define SERIAL_DEBUG_PRINTS_ON 1
 /*******************************************************************************/
 
 // Create IMU objects
 Adafruit_LSM6DSOX lsm6ds;
 Adafruit_LIS3MDL lis3mdl;
 bool lsm6ds_success, lis3mdl_success;
+float accelX, accelY, accelZ, gyroX, gyroY, gyroZ, magX, magY, magZ;
+float aLPF = 0.9; // Low pass filter weight
 
 /* This defines the data storage object that the generated code us//s */
 static can_obj_sbm_network_definition_h_t can_obj;
@@ -104,6 +106,10 @@ void loop()
   lsm6ds.getEvent(&accel, &gyro, &temp);
   lis3mdl.getEvent(&mag);
 
+  accelX = accel.acceleration.x; accelY = accel.acceleration.y; accelZ = accel.acceleration.z;
+  gyroX = gyro.gyro.x; gyroY = gyro.gyro.y; gyroZ = gyro.gyro.z;
+  magX = mag.magnetic.x; magY = mag.magnetic.y; magZ = mag.magnetic.z;
+  
   /**********************************************************************************************/
   /********************************[BEGIN CAN-BUS PROTOCOL LOOP]**********************************/
   /**********************************************************************************************/
@@ -117,19 +123,17 @@ void loop()
 //    /* DEBUG PRINT LINES */
     #if SERIAL_DEBUG_PRINTS_ON
     // Acceleration data
-    Serial.print(accel.acceleration.x);Serial.print(" ");
-    Serial.print(accel.acceleration.y);Serial.print(" ");
-    Serial.print(accel.acceleration.z);Serial.print(" ");
+    Serial.print(accelX);Serial.print(","); Serial.print(accelY);Serial.print(","); Serial.print(accelZ);Serial.print(",");
     // Gyroscope data
-    Serial.print(gyro.gyro.x);Serial.print(" ");
-    Serial.print(gyro.gyro.y);Serial.print(" ");
-    Serial.print(gyro.gyro.z);Serial.print(" ");
+    Serial.print(gyroX);Serial.print(",");
+    Serial.print(gyroY);Serial.print(",");
+    Serial.print(gyroZ);Serial.print(",");
     // Magnetometer data
-    Serial.print(mag.magnetic.x);Serial.print(" ");
-    Serial.print(mag.magnetic.y);Serial.print(" ");
-    Serial.println(mag.magnetic.z);
+    Serial.print(magX);Serial.print(",");
+    Serial.print(magY);Serial.print(",");
+    Serial.println(magZ);
     #endif
-  /**********************************************************************************************/
+    /**********************************************************************************************/
   
     /* Encoding each value into the 64 bit can message per the 
     // bit structure, scaling and offset defined in the .dbc file
@@ -137,19 +141,19 @@ void loop()
     // its datatype was created by dbcc and encompaseses the whole .dbc
     */
     // ACCELERATION DATA
-    encode_can_0x102_Raw_Accel_x_mps2(&can_obj,accel.acceleration.x); 
-    encode_can_0x102_Raw_Accel_y_mps2(&can_obj,accel.acceleration.y);
-    encode_can_0x102_Raw_Accel_z_mps2(&can_obj,accel.acceleration.z);
+    encode_can_0x102_Raw_Accel_x_mps2(&can_obj,accelX); 
+    encode_can_0x102_Raw_Accel_y_mps2(&can_obj,accelY);
+    encode_can_0x102_Raw_Accel_z_mps2(&can_obj,accelZ);
 
     // GYROSCOPE DATA
-    encode_can_0x102_Raw_Gyro_x_rps(&can_obj,gyro.gyro.x); 
-    encode_can_0x102_Raw_Gyro_y_rps(&can_obj,gyro.gyro.y);
-    encode_can_0x102_Raw_Gyro_z_rps(&can_obj,gyro.gyro.z);
+    encode_can_0x102_Raw_Gyro_x_rps(&can_obj,gyroX); 
+    encode_can_0x102_Raw_Gyro_y_rps(&can_obj,gyroY);
+    encode_can_0x102_Raw_Gyro_z_rps(&can_obj,gyroZ);
 
     // MAGNETOMETER DATA
-    encode_can_0x103_Raw_Mag_x_uT(&can_obj,mag.magnetic.x); 
-    encode_can_0x103_Raw_Mag_y_uT(&can_obj,mag.magnetic.y);
-    encode_can_0x103_Raw_Mag_z_uT(&can_obj,mag.magnetic.z);
+    encode_can_0x103_Raw_Mag_x_uT(&can_obj,magX); 
+    encode_can_0x103_Raw_Mag_y_uT(&can_obj,magY);
+    encode_can_0x103_Raw_Mag_z_uT(&can_obj,magZ);
     
     
     // This is the union datatype that allows us to read in uint64_t or uint8_t[8]

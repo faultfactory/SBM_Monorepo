@@ -3,4 +3,9 @@ libraries:
   - name: SafeString
   - name: Adafruit LSM6DS
   - name: Adafruit LIS3MDL
-  - name: Adafruit BusIO
+  - name: Adafruit BusIO 
+  - name: Adafruit GFX Library
+  - name: Adafruit GPS Library
+  - name: Adafruit SH110X
+  - source-url: https://github.com/lcdwiki/LCDWIKI_gui.git
+  - source-url: https://github.com/lcdwiki/LCDWIKI_kbv.git

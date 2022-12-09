@@ -1,11 +1,11 @@
 #include <CAN.h>
 #include <millisDelay.h>
 #include "src/can_conv/sbm_network_definition.h"
-#define SERIAL_DEBUG_PRINTS_ON 0
+#define SERIAL_DEBUG_PRINTS_ON 1
 /*******************************************************************************/
 
 // Declare IMU variables
-double accelX_in, accelY_in, accelZ_in, gyroX_in, gyroY_in, gyroZ_in;
+double accelX_in, accelY_in, accelZ_in, gyroX_in, gyroY_in, gyroZ_in, pressFL_in, pressFR_in;
 int8_t magX_in, magY_in, magZ_in;
 
 // Declare button variables
@@ -55,13 +55,13 @@ void loop()
     MsgData msg; // Create a union object to hold the incoming data.
     long canID = CAN.packetId();
 
-    #if SERIAL_DEBUG_PRINTS_ON
-    Serial.print("Received ");
-    Serial.print("packet with id 0x");
-    Serial.print(canID, HEX);
-    Serial.print(" and length ");
-    Serial.println((int)packetSize);
-    #endif
+//    #if SERIAL_DEBUG_PRINTS_ON
+//    Serial.print("Received ");
+//    Serial.print("packet with id 0x");
+//    Serial.print(canID, HEX);
+//    Serial.print(" and length ");
+//    Serial.println((int)packetSize);
+//    #endif
 
     for (size_t i = 0; i < packetSize; i++)
     {
@@ -115,6 +115,10 @@ void loop()
           }
         }
       }
+
+      // PRESSURE TRANSDUCER DATA
+      decode_can_0x099_FL_Press_psi(&can_obj,&pressFL_in);
+      decode_can_0x099_FR_Press_psi(&can_obj,&pressFR_in);
       
       // ACCELERATION READ
       decode_can_0x102_Raw_Accel_x_mps2(&can_obj,&accelX_in); 
@@ -129,12 +133,14 @@ void loop()
       // MAGNETOMETER DATA
       decode_can_0x103_Raw_Mag_x_uT(&can_obj,&magX_in); 
       decode_can_0x103_Raw_Mag_y_uT(&can_obj,&magY_in);
-      decode_can_0x103_Raw_Mag_z_uT(&can_obj,&magZ_in);
-      
+      decode_can_0x103_Raw_Mag_z_uT(&can_obj,&magZ_in);      
   
       /**********************************************************************************************/
       /* DEBUG PRINT LINES */
       #if SERIAL_DEBUG_PRINTS_ON
+      // Pressure transducer data
+      Serial.print(pressFL_in);Serial.print(" ");
+      Serial.print(pressFR_in);Serial.print(" ");
       // Acceleration data
       Serial.print(accelX_in);Serial.print(" ");
       Serial.print(accelY_in);Serial.print(" ");
