@@ -4,6 +4,7 @@ libraries:
   - name: Adafruit LSM6DS
   - name: Adafruit LIS3MDL
   - name: Adafruit BusIO 
-  - name: LCDWIKI GUI Library 
   - name: Adafruit GFX Library
   - name: Adafruit GPS Library
+  - source-url: https://github.com/lcdwiki/LCDWIKI_gui.git
+    destination-name: "Preliminary_Sensor_Code\TFT_LCD_Touchscreen_Display\TFT_Display_I2C_WheelSpeed_Test\TFT_Display_I2C_WheelSpeed_Test.ino"
