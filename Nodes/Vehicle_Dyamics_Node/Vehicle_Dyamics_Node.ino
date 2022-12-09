@@ -105,12 +105,11 @@ void loop()
   /* Get new normalized sensor events */
   lsm6ds.getEvent(&accel, &gyro, &temp);
   lis3mdl.getEvent(&mag);
-  
-  /* LOW PASS FILTERING */
-  accelX = aLPF*accelX + (1 - aLPF)*accel.acceleration.x; accelY = aLPF*accelY + (1 - aLPF)*accel.acceleration.y; accelZ = aLPF*accelZ + (1 - aLPF)*accel.acceleration.z;
-  gyroX = aLPF*gyroX + (1 - aLPF)*gyro.gyro.x; gyroY = aLPF*gyroY + (1 - aLPF)*gyro.gyro.y; gyroZ = aLPF*gyroZ + (1 - aLPF)*gyro.gyro.z;
-  magX = aLPF*magX + (1 - aLPF)*mag.magnetic.x; magY = aLPF*magY + (1 - aLPF)*mag.magnetic.y; magZ = aLPF*magZ + (1 - aLPF)*mag.magnetic.z;
 
+  accelX = accel.acceleration.x; accelY = accel.acceleration.y; accelZ = accel.acceleration.z;
+  gyroX = gyro.gyro.x; gyroY = gyro.gyro.y; gyroZ = gyro.gyro.z;
+  magX = mag.magnetic.x; magY = mag.magnetic.y; magZ = mag.magnetic.z;
+  
   /**********************************************************************************************/
   /********************************[BEGIN CAN-BUS PROTOCOL LOOP]**********************************/
   /**********************************************************************************************/
@@ -124,9 +123,7 @@ void loop()
 //    /* DEBUG PRINT LINES */
     #if SERIAL_DEBUG_PRINTS_ON
     // Acceleration data
-    Serial.print(accelX);Serial.print(",");
-    Serial.print(accelY);Serial.print(",");
-    Serial.print(accelZ);Serial.print(",");
+    Serial.print(accelX);Serial.print(","); Serial.print(accelY);Serial.print(","); Serial.print(accelZ);Serial.print(",");
     // Gyroscope data
     Serial.print(gyroX);Serial.print(",");
     Serial.print(gyroY);Serial.print(",");
