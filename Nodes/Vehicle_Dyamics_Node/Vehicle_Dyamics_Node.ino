@@ -7,7 +7,7 @@
 #include <Adafruit_LIS3MDL.h>
 #include "src/can_conv/sbm_network_definition.h"
 
-#define SERIAL_DEBUG_PRINTS_ON 0
+#define SERIAL_DEBUG_PRINTS_ON 1
 #define GPSSerial Serial1
 
 /*******************************************************************************/
@@ -15,8 +15,6 @@
 // Create IMU objects
 Adafruit_GPS GPS(&GPSSerial);
 #define GPSECHO false
-
-uint32_t timer = millis();
 
 Adafruit_LSM6DSOX lsm6ds;
 Adafruit_LIS3MDL lis3mdl;
@@ -115,103 +113,104 @@ void loop()
   /**********************************************************************************************/
   /*************************************[BEGIN IMU LOOP]*****************************************/
   /**********************************************************************************************/
-//    sensors_event_t accel, gyro, mag, temp;
-//  
-//    /* Get new normalized sensor events */
-//    lsm6ds.getEvent(&accel, &gyro, &temp);
-//    lis3mdl.getEvent(&mag);
-//  
-//    accelX = accel.acceleration.x; accelY = accel.acceleration.y; accelZ = accel.acceleration.z;
-//    gyroX = gyro.gyro.x; gyroY = gyro.gyro.y; gyroZ = gyro.gyro.z;
-//    magX = mag.magnetic.x; magY = mag.magnetic.y; magZ = mag.magnetic.z;
+    sensors_event_t accel, gyro, mag, temp;
+  
+    /* Get new normalized sensor events */
+    lsm6ds.getEvent(&accel, &gyro, &temp);
+    lis3mdl.getEvent(&mag);
+  
+    accelX = accel.acceleration.x; accelY = accel.acceleration.y; accelZ = accel.acceleration.z;
+    gyroX = gyro.gyro.x; gyroY = gyro.gyro.y; gyroZ = gyro.gyro.z;
+    magX = mag.magnetic.x; magY = mag.magnetic.y; magZ = mag.magnetic.z;
 
   /**********************************************************************************************/
   /*************************************[BEGIN GPS LOOP]*****************************************/
   /**********************************************************************************************/
-  char c = GPS.read();
-  // if you want to debug, this is a good time to do it!
-  if (GPSECHO)
-    if (c) Serial.print(c);
-  // if a sentence is received, we can check the checksum, parse it...
-  if (GPS.newNMEAreceived()) {
-    if (!GPS.parse(GPS.lastNMEA())) // this also sets the newNMEAreceived() flag to false
-      return; // we can fail to parse a sentence in which case we should just wait for another
-  }
-    
-  Vg = GPS.speed*0.5144; // Speed (m/s)
-  psi = GPS.angle; // Yaw (degrees)
-      
-    
-  Serial.print(Vg); Serial.print(","); Serial.println(psi);
+  
+//  char c = GPS.read();
+//  // if you want to debug, this is a good time to do it!
+//  if (GPSECHO)
+//    if (c) Serial.print(c);
+//  // if a sentence is received, we can check the checksum, parse it...
+//  if (GPS.newNMEAreceived()) {
+//    if (!GPS.parse(GPS.lastNMEA())) // this also sets the newNMEAreceived() flag to false
+//      return; // we can fail to parse a sentence in which case we should just wait for another
+//  }
+//    
+//  Vg = GPS.speed*0.5144; // Speed (m/s)
+//  psi = GPS.angle; // Yaw (degrees)
+//      
+//    
+//  Serial.print(Vg); Serial.print(","); Serial.println(psi);
   
   /**********************************************************************************************/
   /********************************[BEGIN CAN-BUS PROTOCOL LOOP]**********************************/
   /**********************************************************************************************/
-//  if(CAN_Send_Delay.justFinished()) // Checking the delay on each loops
-//  {
-//    // Delay has expired so set it to run again. 
-//    // This library does not allow drift and logs the actual expiration time. 
-//    CAN_Send_Delay.repeat(); 
-//
-//    /**********************************************************************************************/
-////    /* DEBUG PRINT LINES */
-//    #if SERIAL_DEBUG_PRINTS_ON
-//    // Acceleration data
-//    Serial.print(accelX);Serial.print(","); Serial.print(accelY);Serial.print(","); Serial.print(accelZ);Serial.print(",");
-//    // Gyroscope data
-//    Serial.print(gyroX);Serial.print(",");
-//    Serial.print(gyroY);Serial.print(",");
-//    Serial.print(gyroZ);Serial.print(",");
-//    // Magnetometer data
+  if(CAN_Send_Delay.justFinished()) // Checking the delay on each loops
+  {
+    // Delay has expired so set it to run again. 
+    // This library does not allow drift and logs the actual expiration time. 
+    CAN_Send_Delay.repeat(); 
+
+    /**********************************************************************************************/
+//    /* DEBUG PRINT LINES */
+    #if SERIAL_DEBUG_PRINTS_ON
+    // Acceleration data
+    Serial.print(accelX);Serial.print(","); Serial.print(accelY);Serial.print(","); Serial.print(accelZ);Serial.print(",");
+    // Gyroscope data
+    Serial.print(gyroX);Serial.print(",");
+    Serial.print(gyroY);Serial.print(",");
+    Serial.println(gyroZ);
+    // Magnetometer data
 //    Serial.print(magX);Serial.print(",");
 //    Serial.print(magY);Serial.print(",");
 //    Serial.print(magZ);Serial.print(",");
 //    // GPS data
 //    Serial.print(Vg);Serial.print(",");
 //    Serial.println(psi);
-//    #endif
-//
-//
-//    /**********************************************************************************************/
-//  
-//    /* Encoding each value into the 64 bit can message per the 
-//    // bit structure, scaling and offset defined in the .dbc file
-//    // this puts the data into storage in the can_obj variable.
-//    // its datatype was created by dbcc and encompaseses the whole .dbc
-//    */
-//    // ACCELERATION DATA
-//    encode_can_0x102_Raw_Accel_x_mps2(&can_obj,accelX); 
-//    encode_can_0x102_Raw_Accel_y_mps2(&can_obj,accelY);
-//    encode_can_0x102_Raw_Accel_z_mps2(&can_obj,accelZ);
-//
-//    // GYROSCOPE DATA
-//    encode_can_0x102_Raw_Gyro_x_rps(&can_obj,gyroX); 
-//    encode_can_0x102_Raw_Gyro_y_rps(&can_obj,gyroY);
-//    encode_can_0x102_Raw_Gyro_z_rps(&can_obj,gyroZ);
-//
-//    // MAGNETOMETER DATA
-//    encode_can_0x103_Raw_Mag_x_uT(&can_obj,magX); 
-//    encode_can_0x103_Raw_Mag_y_uT(&can_obj,magY);
-//    encode_can_0x103_Raw_Mag_z_uT(&can_obj,magZ);
-//    
-//    
-//    // This is the union datatype that allows us to read in uint64_t or uint8_t[8]
-//    MsgData msg_102;
-//    MsgData msg_103;
-//
-//    // This command unloads the message
-//    pack_message(&can_obj,0x102,&msg_102.a); // Gyro & accel
-//    pack_message(&can_obj,0x103,&msg_103.a); // Mag
-//
-//    // Accel & Gyro
-//    CAN.beginPacket(0x102,8,false);
-//    CAN.write(msg_102.b,8);
-//    CAN.endPacket();  
-//
-//    // Mag
-//    CAN.beginPacket(0x103,8,false);
-//    CAN.write(msg_103.b,8);
-//    CAN.endPacket();  
-//  }    
+    #endif
+
+
+    /**********************************************************************************************/
+  
+    /* Encoding each value into the 64 bit can message per the 
+    // bit structure, scaling and offset defined in the .dbc file
+    // this puts the data into storage in the can_obj variable.
+    // its datatype was created by dbcc and encompaseses the whole .dbc
+    */
+    // ACCELERATION DATA
+    encode_can_0x102_Raw_Accel_x_mps2(&can_obj,accelX); 
+    encode_can_0x102_Raw_Accel_y_mps2(&can_obj,accelY);
+    encode_can_0x102_Raw_Accel_z_mps2(&can_obj,accelZ);
+
+    // GYROSCOPE DATA
+    encode_can_0x102_Raw_Gyro_x_rps(&can_obj,gyroX); 
+    encode_can_0x102_Raw_Gyro_y_rps(&can_obj,gyroY);
+    encode_can_0x102_Raw_Gyro_z_rps(&can_obj,gyroZ);
+
+    // MAGNETOMETER DATA
+    encode_can_0x103_Raw_Mag_x_uT(&can_obj,magX); 
+    encode_can_0x103_Raw_Mag_y_uT(&can_obj,magY);
+    encode_can_0x103_Raw_Mag_z_uT(&can_obj,magZ);
+    
+    
+    // This is the union datatype that allows us to read in uint64_t or uint8_t[8]
+    MsgData msg_102;
+    MsgData msg_103;
+
+    // This command unloads the message
+    pack_message(&can_obj,0x102,&msg_102.a); // Gyro & accel
+    pack_message(&can_obj,0x103,&msg_103.a); // Mag
+
+    // Accel & Gyro
+    CAN.beginPacket(0x102,8,false);
+    CAN.write(msg_102.b,8);
+    CAN.endPacket();  
+
+    // Mag
+    CAN.beginPacket(0x103,8,false);
+    CAN.write(msg_103.b,8);
+    CAN.endPacket();  
+  }    
   
 }
