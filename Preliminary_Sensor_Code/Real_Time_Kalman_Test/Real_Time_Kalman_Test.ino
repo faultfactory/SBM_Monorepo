@@ -64,7 +64,7 @@ void setup()
     P(i,i) = 1.0; Q(i,i) = 1.0;
   }
 
-  Q = {1.0,0,0,1.0};
+  Q = {1.0,0.0,0.0,1.0};
   R_accel = {1.0,0,0,0,1.0,0,0,0,1.0};
     
   // Initialize Raw Values
@@ -165,7 +165,7 @@ void loop()
   {
     CAN_Send_Delay.repeat(); 
     if (accel_Raw(1) == accelX || p == gyroX) {
-      for (int i = 1; i <= N; ++i) {
+      for (int i = 1; i <= N; ++i)  {    // I don't remember what pre-incrementing vs post-incrementing does for a for loop but that might be something to look at. 
         if(Predict_Delay.justFinished()) {
           Predict_Delay.repeat();
           Serial.println("Predict");
@@ -174,11 +174,26 @@ void loop()
           f = {p + r*cos(Z(0))*tan(Z(1)) + q*sin(Z(0))*tan(Z(1)),
                           q*cos(Z(0)) - r*sin(Z(0))};
           
-          Z = Z + f*(Tout/N);
-          A = {q*cos(Z(0))*tan(Z(1)) - r*sin(Z(0))*tan(Z(1)), r*cos(Z(0))*(pow(tan(Z(1)),2) + 1) + q*sin(Z(0))*(pow(tan(Z(1)),2) + 1),
+          Z = Z + f*(Tout/N); // BUG_MAYBE: Integer division will drive this term to zero if Tout < N. Looks like it's already a float. Maybe cast as float. 
+          // Z = Z + f*(Tout/(float)N)
+
+          /* Reccomend you pre-compute some of these within a scope for speed for this large calculation. Compiler may do that automatically but it would require less 
+          parenthesis and pow(blah,2) is not optimized. Also explicitly call a float a float. Who knows what's going on behind the scenes.
+          Double check my math if you use this. Might not be necessary at all but worth looking
+
+          { 
+            float cos_z0 = cos(Z(0));
+            float tan_z1 = tan(Z(1));
+            float sin_z0 = sin(Z(0));
+
+            A = {q*cos_z0*tan_z1 - r*sin_z0*tan_z1, r*cos_z0*(tan_z1*tan_z1 + 1f) + q*sin_z0*(tan_z1*tan_z1 + 1f),
+                     - r*cos_z0 - q*sin_z0,                                                             0f};
+
+          */
+          A = {q*cos(Z(0))*tan(Z(1)) - r*sin(Z(0))*tan(Z(1)), r*cos(Z(0))*(pow(tan(Z(1)),2.0) + 1) + q*sin(Z(0))*(pow(tan(Z(1)),2.0) + 1),
                     - r*cos(Z(0)) - q*sin(Z(0)),                                                             0};
-          Ad = I + A*Tp + (A*A)*pow(Tp,2);
-          P = Ad*P*~Ad + Q*pow(Tp,2);
+          Ad = I + A*Tp + (A*A)*pow(Tp,2.0);
+          P = Ad*P*~Ad + Q*pow(Tp,2.0);
         }
       }
     }
@@ -209,6 +224,6 @@ void loop()
 //        } Serial.println(" ");
 //      }
       
-    Serial.print(Z(0)*(180/PI)); Serial.print(" "); Serial.println(Z(1)*(180/PI));
+    Serial.print(Z(0)*(180.0/PI)); Serial.print(" "); Serial.println(Z(1)*(180.0/PI));
   }  
 }
