@@ -2,7 +2,7 @@
 
 #include <CAN.h>
 #include <millisDelay.h>
-#include "src/can_conv/sbm_network_definition.h"
+#include "can_conv/sbm_network_definition.h"
 
 // FOR OLED DISPLAY
 #include <SPI.h>
