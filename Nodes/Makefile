@@ -1,12 +1,21 @@
 none:
 	@echo None built
 
-START=arduino-cli compile --fqbn adafruit:samd:adafruit_feather_m4_can --build-property "compiler.cpp.extra_flags=\"-D
+FQBN=--fqbn adafruit:samd:adafruit_feather_m4_can
+START=arduino-cli compile $(FQBN) --build-property "compiler.cpp.extra_flags=\"-D
 END=\=1\"" Nodes.ino -e
 
-front:
+PORT=$(shell python3 getport.py)
+
+frontv:
 	$(START)FRONT_NODE $(END)
-screen:
+front: frontv
+	arduino-cli upload $(FQBN) -p $(PORT) Nodes.ino
+screenv:
 	$(START)SCREEN_NODE $(END)
-vd:
+screen: screenv
+	arduino-cli upload $(FQBN) -p $(PORT) Nodes.ino
+vdv:
 	$(START)VEHICLE_DYNAMICS_NODE $(END)
+vd: vdv
+	arduino-cli upload $(FQBN) -p $(PORT) Nodes.ino
