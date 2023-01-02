@@ -1,0 +1,22 @@
+{
+	// See https://go.microsoft.com/fwlink/?LinkId=733558
+	// for the documentation about the tasks.json format
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Front Node",
+			"type": "shell",
+			"command": "cd Nodes && make front",
+		},
+		{
+			"label": "Screen Node",
+			"type": "shell",
+			"command": "cd Nodes && make screen",
+		},
+		{
+			"label": "Vehicle Dynamics Node",
+			"type": "shell",
+			"command": "cd Nodes && make vd",
+		}
+	]
+}
