@@ -1,0 +1,37 @@
+{
+	// See https://go.microsoft.com/fwlink/?LinkId=733558
+	// for the documentation about the tasks.json format
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Front Node Verify",
+			"type": "shell",
+			"command": "cd Nodes && make frontv",
+		},
+		{
+			"label": "Front Node Upload",
+			"type": "shell",
+			"command": "cd Nodes && make front",
+		},
+		{
+			"label": "Screen Node Verify",
+			"type": "shell",
+			"command": "cd Nodes && make screenv",
+		},
+		{
+			"label": "Screen Node Upload",
+			"type": "shell",
+			"command": "cd Nodes && make screen",
+		},
+		{
+			"label": "Vehicle Dynamics Node Verify",
+			"type": "shell",
+			"command": "cd Nodes && make vdv",
+		},
+		{
+			"label": "Vehicle Dynamics Node Upload",
+			"type": "shell",
+			"command": "cd Nodes && make vd",
+		}
+	]
+}

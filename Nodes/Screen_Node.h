@@ -45,6 +45,7 @@ void setup()
   CAN_Send_Delay.start(10); //10 ms -> 100 Hz (Receiving 2 messages at 100 Hz, so 200 messages/sec)
 }
 
+void sendCAN(can_obj_sbm_network_definition_h_t &can_obj, bool &Logger_Read);
 void loop()
 {
   /**********************************************************************************************/
