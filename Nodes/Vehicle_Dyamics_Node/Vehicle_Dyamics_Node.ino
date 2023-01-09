@@ -158,13 +158,9 @@ void loop()
     // Acceleration data
     Serial.print(accelX);Serial.print(","); Serial.print(accelY);Serial.print(","); Serial.print(accelZ);Serial.print(",");
     // Gyroscope data
-    Serial.print(gyroX);Serial.print(",");
-    Serial.print(gyroY);Serial.print(",");
-    Serial.println(gyroZ);
+    Serial.print(gyroX);Serial.print(","); Serial.print(gyroY);Serial.print(","); Serial.print(gyroZ); Serial.print(",");
     // Magnetometer data
-//    Serial.print(magX);Serial.print(",");
-//    Serial.print(magY);Serial.print(",");
-//    Serial.print(magZ);Serial.print(",");
+    Serial.print(magX);Serial.print(","); Serial.print(magY);Serial.print(","); Serial.println(magZ);
 //    // GPS data
 //    Serial.print(Vg);Serial.print(",");
 //    Serial.println(psi);

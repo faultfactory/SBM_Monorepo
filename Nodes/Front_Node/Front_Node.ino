@@ -53,6 +53,12 @@ float steerRaw, steerVal;
 int buttonState = 0;
 const int buttonPin = BUTTON_A;
 
+// Wheel speed variables
+const int msgSize = 4;
+byte msgRead[msgSize]; // Message in bytes (8 maximum)
+uint16_t RPM_1, RPM_2;
+int i;
+
 // CAN bus
 /* This defines the data storage object that the generated code us//s */
 static can_obj_sbm_network_definition_h_t can_obj;
@@ -105,6 +111,9 @@ void setup()
     Pfilter[i] = 0;
   }
 
+  // Set up I2C for wheel speeds
+  Wire.begin();
+
   Serial.begin(115200);
   // start the CAN bus at 500 kbps
   CAN.begin(500000);
@@ -136,8 +145,15 @@ void loop()
       Vfilter[i] = aLPF*Vfilter[i] + (1 - aLPF)*anagIn[i]; // Low pass filter (Voltage)
       voltageReal[i] = (Vsupply/resolution)*Vfilter[i];
     }
-    
+  /**********************************************************************************************/
+  Wire.requestFrom(54,msgSize);
 
+  for (i = 0; Wire.available(); i++) {
+        msgRead[i] = Wire.read();
+    }
+
+  read_msg(RPM_1, msgRead, 0);
+  read_msg(RPM_2, msgRead, 2);
     
   /**********************************************************************************************/
     // Re-calibrate the zero
@@ -189,10 +205,12 @@ void loop()
      display.setCursor(0,10); display.println("Rear:"); display.setCursor(85,10); display.println("psi");
      display.setCursor(0,20); display.println("Bias:"); display.setCursor(85,20); display.println("%");
      display.setCursor(0,30); display.println("Steer:"); display.setCursor(85,30); display.println("deg");
+     display.setCursor(0,40); display.println("FR:"); display.setCursor(85,40); display.println("mph");
      display.setCursor(40,0); display.println(Papplied[0]);
      display.setCursor(40,10); display.println(Papplied[1]);
      display.setCursor(40,20); display.println((Papplied[0]/(Papplied[0] + Papplied[1]))*100);
      display.setCursor(40,30); display.println(steerRaw);
+     display.setCursor(40,40); display.println(RPM_1);
      display.display();  
      /**********************************************************************************************/
      // PRESSURE TRANSDUCER DATA
@@ -208,4 +226,9 @@ void loop()
      CAN.write(msg_099.b,8);
      CAN.endPacket();  
   }
+}
+
+void read_msg(uint16_t &x, byte *Arr, int start_bit) {
+  x = Arr[start_bit];
+  x = (x << 8) | Arr[++start_bit];
 }
