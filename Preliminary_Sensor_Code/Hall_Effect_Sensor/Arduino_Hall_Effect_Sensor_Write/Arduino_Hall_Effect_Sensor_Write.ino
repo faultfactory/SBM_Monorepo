@@ -47,7 +47,8 @@ void setup()
 
 void loop() 
 {
-  // Nothing
+  Serial.print(wheelSpeed[0]); Serial.print(" ");
+  Serial.println(wheelSpeed[1]);
 }
 
 
@@ -69,10 +70,6 @@ void requestEvent()
   // Calculate wheelspeed for each wheel (Measures time between pulses in seconds (1 tooth/sec))
   wheelSpeed[0] = int(60/(teeth*((double)((startTime[0] - previousTime[0])/1000000.0))));
   wheelSpeed[1] = int(60/(teeth*((double)((startTime[1] - previousTime[1])/1000000.0))));
-
-//  //Print results
-  Serial.print(wheelSpeed[0]); Serial.print(" ");
-  Serial.println(wheelSpeed[1]);
 
   // Write numbers into message
   write_msg(wheelSpeed[0], msg, 0);

@@ -36,6 +36,11 @@ const float Vsupply = 3.0; //(V), Voltage supplied
 const int Pmax = 500; //(psi), The maximum pressure the transducer can produce
 const int Pmin = 0; //(psi), The minimum pressure the transducer can produce
 
+// Load cell
+const int Voutput = A3;
+int Tare;
+float Force, scale;
+
 //Reading & Calibration variables
 float anagIn[numTrans];
 float voltageReal[numTrans]; //Actual voltage being read
@@ -48,6 +53,11 @@ float aLPF = 0.9; // Low pass filter weight
 
 // Steering
 float steerRaw, steerVal;
+
+// Wheelspeed
+const int msgSize = 4;
+byte msgRead[msgSize]; // Message in bytes (8 maximum)
+uint16_t RPM_1, RPM_2;
 
 // Calibration button variables
 int buttonState = 0;
@@ -74,6 +84,12 @@ void setup()
 {
   /*******************************************************************************/
   pinMode(buttonPin, INPUT);
+
+  //Setup load cell
+  pinMode(Voutput, INPUT);
+
+  //Setup wheelspeed
+  Wire.begin();
 
   // Setup M4 CAN board
   pinMode(PIN_CAN_STANDBY, OUTPUT);
@@ -136,9 +152,25 @@ void loop()
       Vfilter[i] = aLPF*Vfilter[i] + (1 - aLPF)*anagIn[i]; // Low pass filter (Voltage)
       voltageReal[i] = (Vsupply/resolution)*Vfilter[i];
     }
-    
+  /**********************************************************************************************/
+  // Load cell debug
+  Tare = 12; // Update later w/ a button
+  scale = 1.00; // User input?
+  Force = float(analogRead(Voutput)-Tare)*scale;
+  Serial.print(analogRead(Voutput)); Serial.print(", "); Serial.print(Force); Serial.println(" lbf");
+  /**********************************************************************************************/
+  // Wheelspeed debug
+  Wire.requestFrom(54,msgSize);
 
-    
+  for (int i = 0; Wire.available(); i++) {
+        msgRead[i] = Wire.read();
+    }
+
+  read_msg(RPM_1, msgRead, 0);
+  read_msg(RPM_2, msgRead, 2);
+
+  Serial.print(RPM_1); Serial.print(" "); Serial.println(RPM_2);
+  
   /**********************************************************************************************/
     // Re-calibrate the zero
     /* Check if button is pressed down */
@@ -189,10 +221,14 @@ void loop()
      display.setCursor(0,10); display.println("Rear:"); display.setCursor(85,10); display.println("psi");
      display.setCursor(0,20); display.println("Bias:"); display.setCursor(85,20); display.println("%");
      display.setCursor(0,30); display.println("Steer:"); display.setCursor(85,30); display.println("deg");
+     display.setCursor(0,40); display.println("Brake:"); display.setCursor(85,40); display.println("lbf");
+     display.setCursor(0,50); display.println("Hall_1:"); display.setCursor(85,50); display.println("rpm");
      display.setCursor(40,0); display.println(Papplied[0]);
      display.setCursor(40,10); display.println(Papplied[1]);
      display.setCursor(40,20); display.println((Papplied[0]/(Papplied[0] + Papplied[1]))*100);
      display.setCursor(40,30); display.println(steerRaw);
+     display.setCursor(40,40); display.println(Force);
+     display.setCursor(40,50); display.println(RPM_1);
      display.display();  
      /**********************************************************************************************/
      // PRESSURE TRANSDUCER DATA
@@ -208,4 +244,9 @@ void loop()
      CAN.write(msg_099.b,8);
      CAN.endPacket();  
   }
+}
+
+void read_msg(uint16_t &x, byte *Arr, int start_bit) {
+  x = Arr[start_bit];
+  x = (x << 8) | Arr[++start_bit];
 }
