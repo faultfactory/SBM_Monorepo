@@ -1,1 +1,3 @@
 **/.vscode/c_cpp_properties.json
+Nodes/build/**
+Preliminary_Sensor_Code/HallPico/build/*
