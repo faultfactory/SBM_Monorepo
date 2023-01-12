@@ -9,7 +9,8 @@ set(CMAKE_CXX_STANDARD 17)
 # (note this can come from environment, CMake cache etc)
 set(PICO_SDK_PATH "/home/samar/Documents/c/pico/pico-sdk")
 
-set(PICO_BOARD pico_w CACHE STRING "Board type")
+# set(PICO_BOARD pico_w CACHE STRING "Board type")
+set(PICO_BOARD pico CACHE STRING "Board type")
 
 # Pull in Raspberry Pi Pico SDK (must be before project)
 include(pico_sdk_import.cmake)
@@ -25,13 +26,10 @@ pico_sdk_init()
 
 # Add executable. Default name is the project name, version 0.1
 
-add_executable(HallPico HallPico.cpp )
+add_executable(HallPico HallPico.cpp)
 
 pico_set_program_name(HallPico "HallPico")
 pico_set_program_version(HallPico "0.1")
-
-pico_enable_stdio_uart(HallPico 1)
-pico_enable_stdio_usb(HallPico 0)
 
 # Add the standard library to the build
 target_link_libraries(HallPico
@@ -50,3 +48,5 @@ target_link_libraries(HallPico
 
 pico_add_extra_outputs(HallPico)
 
+pico_enable_stdio_usb(${PROJECT_NAME} 0)
+pico_enable_stdio_uart(${PROJECT_NAME} 1)
