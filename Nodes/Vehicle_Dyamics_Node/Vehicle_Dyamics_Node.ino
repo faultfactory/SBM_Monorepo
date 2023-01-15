@@ -5,7 +5,7 @@
 #include <Adafruit_LSM6DSOX.h>
 #include <Adafruit_LIS3MDL.h>
 #include "src/can_conv/sbm_network_definition.h"
-#define SERIAL_DEBUG_PRINTS_ON 0
+#define SERIAL_DEBUG_PRINTS_ON 1
 /*******************************************************************************/
 
 // Create IMU objects

@@ -1,7 +1,20 @@
 #include <CAN.h>
 #include <millisDelay.h>
 #include "src/can_conv/sbm_network_definition.h"
-#define SERIAL_DEBUG_PRINTS_ON 1
+#define SERIAL_DEBUG_PRINTS_ON 0
+
+// FOR OLED DISPLAY
+#include <SPI.h>
+#include <Wire.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SH110X.h>
+
+Adafruit_SH1107 display = Adafruit_SH1107(64, 128, &Wire);
+
+// Button assignment for M4 board
+#define BUTTON_A  9
+#define BUTTON_B  6
+#define BUTTON_C  5
 /*******************************************************************************/
 
 // Declare IMU variables
@@ -11,7 +24,7 @@ int8_t magX_in, magY_in, magZ_in;
 // Declare button variables
 bool Logger_Read = false;
 int buttonState = 0;
-const int buttonPin = 12;
+const int buttonPin = BUTTON_B;
 
 // Declare delay variables
 millisDelay CAN_Send_Delay; 
@@ -38,6 +51,19 @@ void setup()
   pinMode(PIN_CAN_BOOSTEN, OUTPUT);
   digitalWrite(PIN_CAN_BOOSTEN, true); // turn on booster
 
+  // Setup OLED Display
+  display.begin(0x3C, true); // Address 0x3C default
+  
+  display.clearDisplay();
+  display.display();
+  
+  display.setRotation(1);
+  display.setTextSize(1);
+  display.setTextColor(SH110X_WHITE);
+  
+  pinMode(BUTTON_A, INPUT_PULLUP);
+  pinMode(BUTTON_B, INPUT_PULLUP);
+  pinMode(BUTTON_C, INPUT_PULLUP);
 
   Serial.begin(115200);
   CAN.begin(500000); // start the CAN bus at 500 kbps (kilo-bits/second)
@@ -55,20 +81,20 @@ void loop()
     MsgData msg; // Create a union object to hold the incoming data.
     long canID = CAN.packetId();
 
-//    #if SERIAL_DEBUG_PRINTS_ON
-//    Serial.print("Received ");
-//    Serial.print("packet with id 0x");
-//    Serial.print(canID, HEX);
-//    Serial.print(" and length ");
-//    Serial.println((int)packetSize);
-//    #endif
+    #if SERIAL_DEBUG_PRINTS_ON
+    Serial.print("Received ");
+    Serial.print("packet with id 0x");
+    Serial.print(canID, HEX);
+    Serial.print(" and length ");
+    Serial.println((int)packetSize);
+    #endif
 
     for (size_t i = 0; i < packetSize; i++)
     {
       if (!CAN.available())
       {
         #if SERIAL_DEBUG_PRINTS_ON
-        //Serial.println("ERROR: Packet shorter than specified"); // just some print outs if shit hits the fan.
+        Serial.println("ERROR: Packet shorter than specified"); // just some print outs if shit hits the fan.
         #endif                                                    // something went wrong
         
         break;
@@ -154,7 +180,13 @@ void loop()
       Serial.print(magY_in);Serial.print(" ");
       Serial.println(magZ_in);
       #endif
+      
   /**********************************************************************************************/
+     // Print information to serial monitor & OLED
+     display.clearDisplay();
+     display.setCursor(0,0);
+     display.setCursor(0,0); display.println("Logger:"); display.setCursor(40,0); display.println(Logger_Read);
+     display.display(); 
     }
   }
 }
