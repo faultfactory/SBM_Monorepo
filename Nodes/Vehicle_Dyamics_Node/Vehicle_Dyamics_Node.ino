@@ -52,10 +52,14 @@ void setup()
 
   /*******************************************************************************/
   /* GPS */
-  GPS.begin(57600);
+  GPS.begin(9600);
+  //GPS.sendCommand(PMTK_SET_BAUD_115200); // Only should have to do this once
+  GPS.sendCommand(PMTK_SET_NMEA_UPDATE_5HZ); // 5 Hz
+  GPS.sendCommand(PMTK_API_SET_FIX_CTL_5HZ); // Position fix rate fixed to 5 Hz (max speed)
   GPS.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCGGA);
-  GPS.sendCommand(PMTK_SET_NMEA_UPDATE_10HZ);
-  GPS.sendCommand(PGCMD_ANTENNA);
+
+  // Request updates on antenna status, comment out to keep quiet
+  //GPS.sendCommand(PGCMD_ANTENNA);
   /*******************************************************************************/
  
   /* Hardware I2C mode, can pass in address & alt wire */
@@ -111,38 +115,19 @@ void setup()
 void loop()
 {
   /**********************************************************************************************/
-  /*************************************[BEGIN IMU LOOP]*****************************************/
-  /**********************************************************************************************/
-    sensors_event_t accel, gyro, mag, temp;
-  
-    /* Get new normalized sensor events */
-    lsm6ds.getEvent(&accel, &gyro, &temp);
-    lis3mdl.getEvent(&mag);
-  
-    accelX = accel.acceleration.x; accelY = accel.acceleration.y; accelZ = accel.acceleration.z;
-    gyroX = gyro.gyro.x; gyroY = gyro.gyro.y; gyroZ = gyro.gyro.z;
-    magX = mag.magnetic.x; magY = mag.magnetic.y; magZ = mag.magnetic.z;
-
-  /**********************************************************************************************/
   /*************************************[BEGIN GPS LOOP]*****************************************/
   /**********************************************************************************************/
   
-//  char c = GPS.read();
-//  // if you want to debug, this is a good time to do it!
-//  if (GPSECHO)
-//    if (c) Serial.print(c);
-//  // if a sentence is received, we can check the checksum, parse it...
-//  if (GPS.newNMEAreceived()) {
-//    if (!GPS.parse(GPS.lastNMEA())) // this also sets the newNMEAreceived() flag to false
-//      return; // we can fail to parse a sentence in which case we should just wait for another
-//  }
-//    
-//  Vg = GPS.speed*0.5144; // Speed (m/s)
-//  psi = GPS.angle; // Yaw (degrees)
-//      
-//    
-//  Serial.print(Vg); Serial.print(","); Serial.println(psi);
-  
+  char c = GPS.read();
+  // if a sentence is received, we can check the checksum, parse it...
+  if (GPS.newNMEAreceived()) {
+    if (!GPS.parse(GPS.lastNMEA())) // this also sets the newNMEAreceived() flag to false
+      return; // we can fail to parse a sentence in which case we should just wait for another
+  }
+    
+  Vg = GPS.speed*0.5144; // Speed (m/s)
+  psi = GPS.angle; // Yaw (degrees)
+        
   /**********************************************************************************************/
   /********************************[BEGIN CAN-BUS PROTOCOL LOOP]**********************************/
   /**********************************************************************************************/
@@ -152,20 +137,20 @@ void loop()
     // This library does not allow drift and logs the actual expiration time. 
     CAN_Send_Delay.repeat(); 
 
+    /*************************************[BEGIN IMU LOOP]*****************************************/
+    sensors_event_t accel, gyro, mag, temp;
+  
+    /* Get new normalized sensor events */
+    lsm6ds.getEvent(&accel, &gyro, &temp);
+    lis3mdl.getEvent(&mag);
+  
+    accelX = accel.acceleration.x; accelY = accel.acceleration.y; accelZ = accel.acceleration.z;
+    gyroX = gyro.gyro.x; gyroY = gyro.gyro.y; gyroZ = gyro.gyro.z;
+    magX = mag.magnetic.x; magY = mag.magnetic.y; magZ = mag.magnetic.z;
+    
     /**********************************************************************************************/
-//    /* DEBUG PRINT LINES */
-    #if SERIAL_DEBUG_PRINTS_ON
-    // Acceleration data
-    Serial.print(accelX);Serial.print(","); Serial.print(accelY);Serial.print(","); Serial.print(accelZ);Serial.print(",");
-    // Gyroscope data
-    Serial.print(gyroX);Serial.print(","); Serial.print(gyroY);Serial.print(","); Serial.print(gyroZ); Serial.print(",");
-    // Magnetometer data
-    Serial.print(magX);Serial.print(","); Serial.print(magY);Serial.print(","); Serial.println(magZ);
-//    // GPS data
-//    Serial.print(Vg);Serial.print(",");
-//    Serial.println(psi);
-    #endif
-
+    /* DEBUG PRINT LINES */
+    Serial.print(Vg); Serial.print(","); Serial.println(psi);
 
     /**********************************************************************************************/
   
@@ -174,6 +159,11 @@ void loop()
     // this puts the data into storage in the can_obj variable.
     // its datatype was created by dbcc and encompaseses the whole .dbc
     */
+
+    // GPS DATA
+    encode_can_0x101_Body_Speed_mps(&can_obj,Vg);
+    
+    
     // ACCELERATION DATA
     encode_can_0x102_Raw_Accel_x_mps2(&can_obj,accelX); 
     encode_can_0x102_Raw_Accel_y_mps2(&can_obj,accelY);
@@ -191,12 +181,19 @@ void loop()
     
     
     // This is the union datatype that allows us to read in uint64_t or uint8_t[8]
+    MsgData msg_101;
     MsgData msg_102;
     MsgData msg_103;
 
     // This command unloads the message
+    pack_message(&can_obj,0x101,&msg_101.a); // GPS
     pack_message(&can_obj,0x102,&msg_102.a); // Gyro & accel
     pack_message(&can_obj,0x103,&msg_103.a); // Mag
+
+    // GPS
+    CAN.beginPacket(0x101,8,false);
+    CAN.write(msg_101.b,8);
+    CAN.endPacket();  
 
     // Accel & Gyro
     CAN.beginPacket(0x102,8,false);

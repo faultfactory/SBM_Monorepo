@@ -74,6 +74,7 @@ BO_ 258 RAW_Accel_Gyro: 8 Body_Orientation
  SG_ Raw_Accel_x_mps2 : 0|9@1- (0.1,0) [-25.6|25.5] "m/s^2"  Display_Screen
 
 BO_ 257 GPS: 8 Body_Orientation
+ SG_ True_Yaw_deg : 8|12@1+ (0.1,0) [0|409.5] "deg" Vector__XXX
  SG_ Body_Speed_mps : 0|8@1+ (0.1,0) [0|25.5] "m/s"  Display_Screen
 
 BO_ 256 IMU: 8 Body_Orientation
@@ -103,6 +104,11 @@ CM_ SG_ 258 Raw_Accel_y_mps2 "Raw acceleration data from the accelerometer (m/s^
 y-Axis";
 CM_ SG_ 258 Raw_Accel_x_mps2 "Raw acceleration data from the accelerometer (m/s^2)
 x-Axis";
+CM_ SG_ 257 True_Yaw_deg "Yaw angle of the vehicle body in degrees
+
+Output is an integer to save space
+
+Resolution of 0.1 degrees";
 CM_ SG_ 257 Body_Speed_mps "Velocity of the vehicle body in m/s
 
 Resolution of 0.1 m/s (0.224 mph)";
