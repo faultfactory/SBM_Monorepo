@@ -81,6 +81,13 @@ Resolution of 0.1 degrees */
 } POSTPACK can_0x100_IMU_t;
 
 typedef PREPACK struct {
+	/* True_Yaw_deg: Yaw angle of the vehicle body in degrees
+
+Output is an integer to save space
+
+Resolution of 0.1 degrees */
+	/* scaling 0.1, offset 0.0, units deg  */
+	uint16_t True_Yaw_deg;
 	/* Body_Speed_mps: Velocity of the vehicle body in m/s
 
 Resolution of 0.1 m/s (0.224 mph) */
@@ -229,6 +236,8 @@ int decode_can_0x100_Body_Yaw_deg(const can_obj_sbm_network_definition_h_t *o, d
 int encode_can_0x100_Body_Yaw_deg(can_obj_sbm_network_definition_h_t *o, double in);
 
 
+int decode_can_0x101_True_Yaw_deg(const can_obj_sbm_network_definition_h_t *o, double *out);
+int encode_can_0x101_True_Yaw_deg(can_obj_sbm_network_definition_h_t *o, double in);
 int decode_can_0x101_Body_Speed_mps(const can_obj_sbm_network_definition_h_t *o, double *out);
 int encode_can_0x101_Body_Speed_mps(can_obj_sbm_network_definition_h_t *o, double in);
 
