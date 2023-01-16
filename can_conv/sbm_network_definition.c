@@ -530,6 +530,10 @@ static int pack_can_0x101_GPS(can_obj_sbm_network_definition_h_t *o, uint64_t *d
 	assert(data);
 	register uint64_t x;
 	register uint64_t i = 0;
+	/* True_Yaw_deg: start-bit 8, length 12, endianess intel, scaling 0.1, offset 0 */
+	x = ((uint16_t)(o->can_0x101_GPS.True_Yaw_deg)) & 0xfff;
+	x <<= 8; 
+	i |= x;
 	/* Body_Speed_mps: start-bit 0, length 8, endianess intel, scaling 0.1, offset 0 */
 	x = ((uint8_t)(o->can_0x101_GPS.Body_Speed_mps)) & 0xff;
 	i |= x;
@@ -545,11 +549,38 @@ static int unpack_can_0x101_GPS(can_obj_sbm_network_definition_h_t *o, uint64_t 
 	register uint64_t i = (data);
 	if (dlc < 8)
 		return -1;
+	/* True_Yaw_deg: start-bit 8, length 12, endianess intel, scaling 0.1, offset 0 */
+	x = (i >> 8) & 0xfff;
+	o->can_0x101_GPS.True_Yaw_deg = x;
 	/* Body_Speed_mps: start-bit 0, length 8, endianess intel, scaling 0.1, offset 0 */
 	x = i & 0xff;
 	o->can_0x101_GPS.Body_Speed_mps = x;
 	o->can_0x101_GPS_rx = 1;
 	o->can_0x101_GPS_time_stamp_rx = time_stamp;
+	return 0;
+}
+
+int decode_can_0x101_True_Yaw_deg(const can_obj_sbm_network_definition_h_t *o, double *out) {
+	assert(o);
+	assert(out);
+	double rval = (double)(o->can_0x101_GPS.True_Yaw_deg);
+	rval *= 0.1;
+	if (rval <= 409.5) {
+		*out = rval;
+		return 0;
+	} else {
+		*out = (double)0;
+		return -1;
+	}
+}
+
+int encode_can_0x101_True_Yaw_deg(can_obj_sbm_network_definition_h_t *o, double in) {
+	assert(o);
+	o->can_0x101_GPS.True_Yaw_deg = 0;
+	if (in > 409.5)
+		return -1;
+	in *= 10;
+	o->can_0x101_GPS.True_Yaw_deg = in;
 	return 0;
 }
 
@@ -581,6 +612,7 @@ int print_can_0x101_GPS(const can_obj_sbm_network_definition_h_t *o, FILE *outpu
 	assert(o);
 	assert(output);
 	int r = 0;
+	r = print_helper(r, fprintf(output, "True_Yaw_deg = (wire: %.0f)\n", (double)(o->can_0x101_GPS.True_Yaw_deg)));
 	r = print_helper(r, fprintf(output, "Body_Speed_mps = (wire: %.0f)\n", (double)(o->can_0x101_GPS.Body_Speed_mps)));
 	return r;
 }
