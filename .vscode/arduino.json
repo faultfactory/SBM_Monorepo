@@ -1,11 +1,5 @@
 {
-<<<<<<< HEAD
     "board": "adafruit:samd:adafruit_feather_m4_can",
-    "sketch": "Preliminary_Sensor_Code/Hall_Effect_Sensor/Arduino_Hall_Effect_Sensor_Read/Arduino_Hall_Effect_Sensor_Read.ino",
-    "port": "/dev/ttyACM0"
-=======
     "sketch": "Nodes/Nodes.ino",
     "configuration": "cache=on,speed=120,opt=small,maxqspi=50,usbstack=arduino,debug=off",
-    "board": "adafruit:samd:adafruit_feather_m4_can"
->>>>>>> fba2c0016150fda59553a1181ecffa414262d5c8
 }
