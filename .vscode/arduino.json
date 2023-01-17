@@ -1,3 +1,5 @@
 {
-    "board": "adafruit:samd:adafruit_feather_m4_can"
+    "board": "adafruit:samd:adafruit_feather_m4_can",
+    "sketch": "Preliminary_Sensor_Code/Hall_Effect_Sensor/Arduino_Hall_Effect_Sensor_Read/Arduino_Hall_Effect_Sensor_Read.ino",
+    "port": "/dev/ttyACM0"
 }

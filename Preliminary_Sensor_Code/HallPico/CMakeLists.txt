@@ -44,6 +44,9 @@ target_include_directories(HallPico PRIVATE
 # Add any user requested libraries
 target_link_libraries(HallPico
         hardware_i2c
+		pico_stdlib
+		pico_multicore
+		pico_cyw43_arch_none
         )
 
 pico_add_extra_outputs(HallPico)
