@@ -1,10 +1,8 @@
 #include <Wire.h>
 
-// Variables
 const int msgSize = 4;
-byte msgRead[msgSize]; // Message in bytes (8 maximum)
+uint8_t msgRead[msgSize]; // Message in bytes (8 maximum)
 uint16_t RPM_1, RPM_2;
-int i;
 
 void setup() {
 	Wire.begin();
@@ -13,29 +11,18 @@ void setup() {
 }
 
 void loop() {
-	Wire.requestFrom(8, msgSize);
-
-	for (i = 0; Wire.available(); i++) {
-		Serial.println("available");
-		Serial.println(Wire.read());
-
-		// msgRead[i] = Wire.read();
+	Wire.requestFrom(8, 4);
+	
+	for (int i = 0; Wire.available(); i++) {
+		msgRead[i] = Wire.read();
 	}
 
-	// read_msg(RPM_1, msgRead, 0);
-	// read_msg(RPM_2, msgRead, 2);
-
-	// Serial.print(RPM_1); Serial.print(" "); Serial.println(RPM_2);
+	RPM_1 = msgRead[1] * (1<<8) + msgRead[0];
+	RPM_2 = msgRead[3] * (1<<8) + msgRead[2];
+	Serial.print(RPM_1); Serial.print(" "); Serial.println(RPM_2);
 }
 
-void read_msg(uint16_t& x, byte* Arr, int start_bit) {
-	x = Arr[start_bit];
-	x = (x << 8) | Arr[++start_bit];
-}
-
-
-
-void scan() {
+void scan() { // Taken from somewhere online, I forgot where
 	byte error, address;
 	int nDevices;
 

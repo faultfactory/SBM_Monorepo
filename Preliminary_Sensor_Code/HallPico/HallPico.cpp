@@ -5,7 +5,7 @@ int main() {
 	cout << "Waiting for " << I2C_INIT_DELAY << "ms before I2C init" << endl;
 	sleep_ms(I2C_INIT_DELAY);
 
-	// i2cInit();
+	i2cInit();
 	// i2cPrint();
 
 	if (cyw43_arch_init()) {
@@ -23,20 +23,18 @@ int main() {
 }
 
 void loop() {
-	// auto test = i2c_get_read_available(I2C_PORT);
-	// if (test != 0){
-	// 	cout << test << endl;
-	// }
 	sendRPMs();
-	sleep_ms(1000);
+	sleep_ms(DATA_INTERVAL);
 }
 
 void loop1() {
-	
+
 }
 
 void hallTrig(uint gpio, uint32_t events) {
-	// cout << gpio << endl;
+	#ifdef VERBOSE
+	cout << gpio << endl;
+	#endif
 	uint8_t hall = -1;
 	for (uint8_t i = 0; i < numHalls; i++) {
 		if (halls[i] == gpio) {
@@ -47,7 +45,6 @@ void hallTrig(uint gpio, uint32_t events) {
 	if (hall != -1) {
 		uint64_t t = time_us_64();
 		uint64_t dt = t - prevTimes[hall];
-		dt = 3000; // TODO remove
 		if (dt > debounceTime) {
 			timeDifs[hall] = dt;
 			prevTimes[hall] = t;
@@ -63,24 +60,27 @@ void hallTrig(uint gpio, uint32_t events) {
 	}
 }
 
-void sendRPMs(){
-	uint16_t rpms[numHalls];
-	for (int i = 0; i < numHalls; i++){
-		if (timeDifs[i]){
+void sendRPMs() {
+	for (int i = 0; i < numHalls; i++) {
+		if (timeDifs[i]) {
 			rpms[i] = rpm(timeDifs[i]);
 		} else {
 			rpms[i] = 0;
 		}
+		#ifdef VERBOSE
 		cout << timeDifs[i] << " ";
+		#endif
 	}
-	uint8_t r8[numHalls*2];
-	for (int i = 0; i < numHalls; i++){
+	uint8_t r8[numHalls * 2];
+	for (int i = 0; i < numHalls; i++) {
 		uint16_t r = rpms[i];
 		uint8_t part1 = r;
-		uint8_t part2 = r>>8;
-		r8[2*i] = part1;
-		r8[2*i+1] = part2;
+		uint8_t part2 = r >> 8;
+		r8[2 * i] = part1;
+		r8[2 * i + 1] = part2;
 	}
-	i2c_write_raw_blocking(I2C_PORT, r8, numHalls*2);
+	i2c_write_raw_blocking(I2C_PORT, r8, numHalls * 2);
+	#ifdef VERBOSE
 	cout << "written" << endl;
+	#endif
 }
