@@ -32,6 +32,7 @@ void loop1() {
 }
 
 void hallTrig(uint gpio, uint32_t events) {
+	uint64_t t = time_us_64();
 	#ifdef VERBOSE
 	cout << gpio << endl;
 	#endif
@@ -43,7 +44,6 @@ void hallTrig(uint gpio, uint32_t events) {
 		}
 	}
 	if (hall != -1) {
-		uint64_t t = time_us_64();
 		uint64_t dt = t - prevTimes[hall];
 		if (dt > debounceTime) {
 			timeDifs[hall] = dt;
