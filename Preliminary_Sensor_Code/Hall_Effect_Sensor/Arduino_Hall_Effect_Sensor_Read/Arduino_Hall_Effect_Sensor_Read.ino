@@ -17,12 +17,13 @@ void loop() {
 		msgRead[i] = Wire.read();
 	}
 
-	RPM_1 = msgRead[1] * (1<<8) + msgRead[0];
+	RPM_1 = msgRead[1] * (1<<8) + msgRead[0]; // Combining 2 uint8_t into 1 uint16_t
 	RPM_2 = msgRead[3] * (1<<8) + msgRead[2];
 	Serial.print(RPM_1); Serial.print(" "); Serial.println(RPM_2);
 }
 
-void scan() { // Taken from somewhere online, I forgot where
+void scan() { 
+	// Taken from somewhere online, I forgot where
 	byte error, address;
 	int nDevices;
 
