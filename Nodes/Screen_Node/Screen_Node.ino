@@ -5,7 +5,7 @@
 /*******************************************************************************/
 
 // Declare IMU variables
-double accelX_in, accelY_in, accelZ_in, gyroX_in, gyroY_in, gyroZ_in, pressFL_in, pressFR_in;
+double accelX_in, accelY_in, accelZ_in, gyroX_in, gyroY_in, gyroZ_in, pressFL_in, pressFR_in, Vg_in, psi_in;
 int8_t magX_in, magY_in, magZ_in;
 
 // Declare button variables
@@ -119,6 +119,10 @@ void loop()
       // PRESSURE TRANSDUCER DATA
       decode_can_0x099_FL_Press_psi(&can_obj,&pressFL_in);
       decode_can_0x099_FR_Press_psi(&can_obj,&pressFR_in);
+
+      // GPS READ
+      decode_can_0x101_Body_Speed_mps(&can_obj,&Vg_in);
+      decode_can_0x101_True_Yaw_deg(&can_obj,&psi_in);
       
       // ACCELERATION READ
       decode_can_0x102_Raw_Accel_x_mps2(&can_obj,&accelX_in); 
@@ -152,13 +156,16 @@ void loop()
       // Magnetometer data
       Serial.print(magX_in);Serial.print(" ");
       Serial.print(magY_in);Serial.print(" ");
-      Serial.println(magZ_in);
+      Serial.print(magZ_in);Serial.print(" ");
+      // GPS data
+      Serial.print(Vg_in);Serial.print(" ");
+      Serial.print(psi_in);Serial.println(" ");
+      
       #endif
   /**********************************************************************************************/
     }
   }
 }
-
 
 void sendCAN(can_obj_sbm_network_definition_h_t &can_obj, bool &Logger_Read) 
 {
