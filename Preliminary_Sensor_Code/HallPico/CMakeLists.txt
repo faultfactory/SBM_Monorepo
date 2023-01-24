@@ -51,5 +51,10 @@ target_link_libraries(HallPico
 
 pico_add_extra_outputs(HallPico)
 
+# When using picoprobe
 pico_enable_stdio_usb(${PROJECT_NAME} 0)
 pico_enable_stdio_uart(${PROJECT_NAME} 1)
+
+# When running normally
+# pico_enable_stdio_usb(${PROJECT_NAME} 1)
+# pico_enable_stdio_uart(${PROJECT_NAME} 0)

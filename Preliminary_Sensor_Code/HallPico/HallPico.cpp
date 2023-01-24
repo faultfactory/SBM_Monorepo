@@ -12,6 +12,8 @@ int main() {
 		return -1;
 	}
 
+	setLed(1);
+
 	multicore_reset_core1(); // Likely not required to be done since multicore launch happens basically at bootup, but just in case.
 	multicore_launch_core1(setup1);
 
@@ -53,7 +55,7 @@ void hallTrig(uint gpio, uint32_t events) {
 			cout << "rpm: " << rpm(dt) << endl;
 			cout << "mph: " << mph(dt) << endl;
 			#endif
-			toggleLed();
+			// toggleLed();
 		}
 	} else {
 		printf("ERROR: Hall pins may have been set up incorrectly.\n");
