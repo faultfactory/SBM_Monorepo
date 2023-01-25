@@ -8,14 +8,20 @@
 using namespace std;
 #define TEETH 32.0
 // #define VERBOSE
+#define TEST_MODE
 
-const uint8_t numHalls = 2;
-const uint8_t halls[numHalls] = { 2,3 };
-uint64_t prevTimes[numHalls]; // Pico gives time as a 64 bit number with time_us_64() hence uint64_t
-uint64_t timeDifs[numHalls];
-uint16_t rpms[numHalls]; // RPM is going to be less than 65535 unless we go supersonic, so uint16_t is fine
-// const uint64_t debounceTime = 2500; // Minimum time between switching events to stop it from having near infinite speed.
-const uint64_t debounceTime = 100;
+const uint8_t NUM_HALLS = 2;
+const uint8_t HALLS[NUM_HALLS] = { 2,3 };
+uint64_t prevTimes[NUM_HALLS]; // Pico gives time as a 64 bit number with time_us_64() hence uint64_t
+uint64_t timeDifs[NUM_HALLS];
+uint16_t rpms[NUM_HALLS]; // RPM is going to be less than 65535 unless we go supersonic, so uint16_t is fine
+const uint64_t DEBOUNCE_TIME = 100; // Minimum time between switching events to stop it from having near infinite speed.
+
+#ifdef TEST_MODE
+#define TEST_MAX 5000
+#define TEST_MIN 3000
+bool states[NUM_HALLS];
+#endif
 
 void loop(); // Core 0 is responsible for communications and core 1 covers collecting the data
 void loop1();
@@ -64,9 +70,21 @@ uint64_t calcSpeed(uint64_t dt) { // Don't use, only left in because it was used
 }
 
 void setup1() {
+	#ifndef TEST_MODE
 	// Interrupts have to be called from core 1 so that they will be handled with core 1
 	gpio_set_irq_enabled_with_callback(2, GPIO_IRQ_EDGE_RISE, true, &hallTrig);
 	gpio_set_irq_enabled_with_callback(3, GPIO_IRQ_EDGE_RISE, true, &hallTrig);
+	#endif
+	#ifdef TEST_MODE
+	for (int i = 0; i < NUM_HALLS; i++) {
+		if (i % 2) {
+			timeDifs[i] = TEST_MAX;
+		} else {
+			timeDifs[i] = TEST_MIN;
+		}
+		states[i] = i % 2;
+	}
+	#endif
 	while (true) {
 		loop1();
 	}

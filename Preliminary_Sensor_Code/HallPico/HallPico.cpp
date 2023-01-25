@@ -6,7 +6,7 @@ int main() {
 	sleep_ms(I2C_INIT_DELAY);
 
 	i2cInit();
-	
+
 	if (cyw43_arch_init()) {
 		printf("WiFi init failed");
 		return -1;
@@ -30,7 +30,19 @@ void loop() {
 }
 
 void loop1() {
-
+	#ifdef TEST_MODE
+	for (int i = 0; i < NUM_HALLS; i++) {
+		if (states[i]) {
+			timeDifs[i]--;
+		} else {
+			timeDifs[i]++;
+		}
+		if (timeDifs[i] > TEST_MAX || timeDifs[i] < TEST_MIN) {
+			states[i] = !states[i];
+		}
+	}
+	sleep_ms(DATA_INTERVAL);
+	#endif
 }
 
 void hallTrig(uint gpio, uint32_t events) {
@@ -39,15 +51,15 @@ void hallTrig(uint gpio, uint32_t events) {
 	cout << gpio << endl;
 	#endif
 	uint8_t hall = -1;
-	for (uint8_t i = 0; i < numHalls; i++) {
-		if (halls[i] == gpio) {
+	for (uint8_t i = 0; i < NUM_HALLS; i++) {
+		if (HALLS[i] == gpio) {
 			hall = i;
 			break;
 		}
 	}
 	if (hall != -1) {
 		uint64_t dt = t - prevTimes[hall];
-		if (dt > debounceTime) {
+		if (dt > DEBOUNCE_TIME) {
 			timeDifs[hall] = dt;
 			prevTimes[hall] = t;
 			#ifdef VERBOSE
@@ -63,7 +75,7 @@ void hallTrig(uint gpio, uint32_t events) {
 }
 
 void sendRPMs() {
-	for (int i = 0; i < numHalls; i++) {
+	for (int i = 0; i < NUM_HALLS; i++) {
 		if (timeDifs[i]) {
 			rpms[i] = rpm(timeDifs[i]);
 		} else {
@@ -73,15 +85,15 @@ void sendRPMs() {
 		cout << timeDifs[i] << " ";
 		#endif
 	}
-	uint8_t r8[numHalls * 2]; // i2c needs sent data as single bytes, so spliting 1 uint16_t into 2 uint8_t
-	for (int i = 0; i < numHalls; i++) {
+	uint8_t r8[NUM_HALLS * 2]; // i2c needs sent data as single bytes, so spliting 1 uint16_t into 2 uint8_t
+	for (int i = 0; i < NUM_HALLS; i++) {
 		uint16_t r = rpms[i];
 		uint8_t part1 = r;
 		uint8_t part2 = r >> 8;
 		r8[2 * i] = part1;
 		r8[2 * i + 1] = part2;
 	}
-	i2c_write_raw_blocking(I2C_PORT, r8, numHalls * 2);
+	i2c_write_raw_blocking(I2C_PORT, r8, NUM_HALLS * 2);
 	#ifdef VERBOSE
 	cout << "written" << endl;
 	#endif
