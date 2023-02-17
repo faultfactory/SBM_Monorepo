@@ -54,7 +54,7 @@ void setup()
   /* GPS */
   GPS.begin(9600);
   //GPS.sendCommand(PMTK_SET_BAUD_9600); // Only should have to do this once
-  GPS.sendCommand(PMTK_SET_NMEA_UPDATE_10HZ); // 5 Hz
+  GPS.sendCommand(PMTK_SET_NMEA_UPDATE_5HZ); // 5 Hz
   GPS.sendCommand(PMTK_API_SET_FIX_CTL_5HZ); // Position fix rate fixed to 5 Hz (max speed)
   GPS.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCGGA);
 
@@ -121,13 +121,14 @@ void loop()
   char c = GPS.read();
   // if a sentence is received, we can check the checksum, parse it...
   if (GPS.newNMEAreceived()) {
+
       // Set values
       Vg = GPS.speed; // Speed (m/s)
       psi = GPS.angle; // Yaw (degrees)
 
-      // debug print lines
-      Serial.print(Vg); Serial.print(" "); Serial.println(psi);
-
+      if (!GPS.parse(GPS.lastNMEA())) // this also sets the newNMEAreceived() flag to false
+        return;
+      
       // Send GPS CAN data
       MsgData msg_101;
       pack_message(&can_obj,0x101,&msg_101.a); // GPS
@@ -138,9 +139,6 @@ void loop()
       CAN.beginPacket(0x101,8,false);
       CAN.write(msg_101.b,8);
       CAN.endPacket();  
-      
-    if (!GPS.parse(GPS.lastNMEA())) // this also sets the newNMEAreceived() flag to false
-      return; // we can fail to parse a sentence in which case we should just wait for another
   }
         
   /**********************************************************************************************/
@@ -170,6 +168,10 @@ void loop()
     // this puts the data into storage in the can_obj variable.
     // its datatype was created by dbcc and encompaseses the whole .dbc
     */
+
+    #if SERIAL_DEBUG_PRINTS_ON
+      Serial.print("X: ");Serial.print(accelX);Serial.print(", Y: ");Serial.print(accelY);Serial.print(", Z: ");Serial.println(accelZ);
+    #endif
     
     // ACCELERATION DATA
     encode_can_0x102_Raw_Accel_x_mps2(&can_obj,accelX); 

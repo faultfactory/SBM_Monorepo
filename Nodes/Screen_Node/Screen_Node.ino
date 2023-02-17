@@ -4,9 +4,23 @@
 #define SERIAL_DEBUG_PRINTS_ON 1
 /*******************************************************************************/
 
+// FOR OLED DISPLAY
+#include <SPI.h>
+#include <Wire.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SH110X.h>
+
+Adafruit_SH1107 display = Adafruit_SH1107(64, 128, &Wire);
+
+// Button assignment for M4 board
+#define BUTTON_A  9
+#define BUTTON_B  6
+#define BUTTON_C  5
+
 // Declare IMU variables
 double accelX_in, accelY_in, accelZ_in, gyroX_in, gyroY_in, gyroZ_in, pressFL_in, pressFR_in, Vg_in, psi_in;
 int8_t magX_in, magY_in, magZ_in;
+double RPM_1, RPM_2;
 
 // Declare button variables
 bool Logger_Read = false;
@@ -27,10 +41,11 @@ union MsgData
   uint8_t b[8]; // Adafruit CAN library wants uint8_t[8]
 };
 
-
 void setup()
 {
   /*******************************************************************************/
+  Serial.begin(115200);
+  
   pinMode(buttonPin, INPUT);
   
   pinMode(PIN_CAN_STANDBY, OUTPUT);
@@ -38,8 +53,26 @@ void setup()
   pinMode(PIN_CAN_BOOSTEN, OUTPUT);
   digitalWrite(PIN_CAN_BOOSTEN, true); // turn on booster
 
+  // Setup OLED Display
+  display.begin(0x3C, true); // Address 0x3C default
 
-  Serial.begin(115200);
+  display.display();
+  delay(1000);
+  display.clearDisplay();
+  display.display();
+
+  display.setRotation(1);
+  
+  pinMode(BUTTON_A, INPUT_PULLUP);
+  pinMode(BUTTON_B, INPUT_PULLUP);
+  pinMode(BUTTON_C, INPUT_PULLUP);
+
+  display.setTextSize(1);
+  display.setTextColor(SH110X_WHITE);
+  display.setCursor(0,0);
+  display.print(" Waiting for CAN \ninput . . .");
+  display.display(); 
+  
   CAN.begin(500000); // start the CAN bus at 500 kbps (kilo-bits/second)
 
   CAN_Send_Delay.start(10); //10 ms -> 100 Hz (Receiving 2 messages at 100 Hz, so 200 messages/sec)
@@ -55,13 +88,13 @@ void loop()
     MsgData msg; // Create a union object to hold the incoming data.
     long canID = CAN.packetId();
 
-//    #if SERIAL_DEBUG_PRINTS_ON
-//    Serial.print("Received ");
-//    Serial.print("packet with id 0x");
-//    Serial.print(canID, HEX);
-//    Serial.print(" and length ");
-//    Serial.println((int)packetSize);
-//    #endif
+    #if SERIAL_DEBUG_PRINTS_ON
+    Serial.print("Received ");
+    Serial.print("packet with id 0x");
+    Serial.print(canID, HEX);
+    Serial.print(" and length ");
+    Serial.println((int)packetSize);
+    #endif
 
     for (size_t i = 0; i < packetSize; i++)
     {
@@ -137,31 +170,25 @@ void loop()
       // MAGNETOMETER DATA
       decode_can_0x103_Raw_Mag_x_uT(&can_obj,&magX_in); 
       decode_can_0x103_Raw_Mag_y_uT(&can_obj,&magY_in);
-      decode_can_0x103_Raw_Mag_z_uT(&can_obj,&magZ_in);      
+      decode_can_0x103_Raw_Mag_z_uT(&can_obj,&magZ_in);
+
+      // WHEEL SPEED
+      decode_can_0x098_FL_Wheelspeed_rpm(&can_obj, &RPM_1);
+      decode_can_0x098_FR_Wheelspeed_rpm(&can_obj, &RPM_2);
   
       /**********************************************************************************************/
-      /* DEBUG PRINT LINES */
-      #if SERIAL_DEBUG_PRINTS_ON
-      // Pressure transducer data
-      Serial.print(pressFL_in);Serial.print(" ");
-      Serial.print(pressFR_in);Serial.print(" ");
-      // Acceleration data
-      Serial.print(accelX_in);Serial.print(" ");
-      Serial.print(accelY_in);Serial.print(" ");
-      Serial.print(accelZ_in);Serial.print(" ");
-      // Gyroscope data
-      Serial.print(gyroX_in);Serial.print(" ");
-      Serial.print(gyroY_in);Serial.print(" ");
-      Serial.print(gyroZ_in);Serial.print(" ");
-      // Magnetometer data
-      Serial.print(magX_in);Serial.print(" ");
-      Serial.print(magY_in);Serial.print(" ");
-      Serial.print(magZ_in);Serial.print(" ");
-      // GPS data
-      Serial.print(Vg_in);Serial.print(" ");
-      Serial.print(psi_in);Serial.println(" ");
-      
-      #endif
+     // Print information to serial monitor & OLED
+     display.clearDisplay();
+     display.setCursor(0,0);
+     display.setCursor(0,0); display.println("Front:"); display.setCursor(85,0); display.println("psi");
+     display.setCursor(0,10); display.println("Rear:"); display.setCursor(85,10); display.println("psi");
+     display.setCursor(0,20); display.println("Steer:"); display.setCursor(85,20); display.println("deg");
+     display.setCursor(0,30); display.println("Brake:"); display.setCursor(85,30); display.println("lbf");
+     display.setCursor(0,40); display.println("Hall_1:"); display.setCursor(85,40); display.println("rpm");
+     display.setCursor(0,50); display.println("Hall_2:"); display.setCursor(85,50); display.println("rpm");
+     display.setCursor(40,40); display.println(RPM_1);
+     display.setCursor(40,50); display.println(RPM_2);
+     display.display();  
   /**********************************************************************************************/
     }
   }

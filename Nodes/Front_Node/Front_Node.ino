@@ -155,7 +155,7 @@ void loop()
   
   /**********************************************************************************************/
   // Wheelspeed debug
-  Wire.requestFrom(54,msgSize);
+  Wire.requestFrom(8,msgSize);
 
   for (int i = 0; Wire.available(); i++) {
         msgRead[i] = Wire.read();

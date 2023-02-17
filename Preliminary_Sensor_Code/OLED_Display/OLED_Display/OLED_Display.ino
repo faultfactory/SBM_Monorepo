@@ -51,7 +51,7 @@ void setup() {
   display.clearDisplay();
   display.display();
 
-  display.setRotation(1);
+  display.setRotation(3);
   Serial.println("Button test");
 
   pinMode(BUTTON_A, INPUT_PULLUP);
