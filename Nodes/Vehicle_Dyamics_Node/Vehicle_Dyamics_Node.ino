@@ -7,7 +7,7 @@
 #include <Adafruit_LIS3MDL.h>
 #include "src/can_conv/sbm_network_definition.h"
 
-#define SERIAL_DEBUG_PRINTS_ON 1
+#define SERIAL_DEBUG_PRINTS_ON 0
 #define GPSSerial Serial1
 
 /*******************************************************************************/
@@ -123,7 +123,7 @@ void loop()
   if (GPS.newNMEAreceived()) {
 
       // Set values
-      Vg = GPS.speed; // Speed (m/s)
+      Vg = (GPS.speed)/1.944; // Convert speed  from knots to m/s
       psi = GPS.angle; // Yaw (degrees)
 
       if (!GPS.parse(GPS.lastNMEA())) // this also sets the newNMEAreceived() flag to false
@@ -170,7 +170,7 @@ void loop()
     */
 
     #if SERIAL_DEBUG_PRINTS_ON
-      Serial.print("X: ");Serial.print(accelX);Serial.print(", Y: ");Serial.print(accelY);Serial.print(", Z: ");Serial.println(accelZ);
+      Serial.print("Z: ");Serial.print(accelZ);Serial.print("|| Speed: ");Serial.print(Vg);Serial.print("|| Yaw: ");Serial.println(psi);
     #endif
     
     // ACCELERATION DATA

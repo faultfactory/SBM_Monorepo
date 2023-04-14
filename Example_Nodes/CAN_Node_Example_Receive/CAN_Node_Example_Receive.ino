@@ -108,11 +108,6 @@ void setup()
   // start the CAN bus at 500 kbps
     CAN.begin(500000);
 
-  ///////////EXAMPLE ONLY, DELETE ME FOR USE ON VEHICLE //////////
-  //CAN Loopback is for validating code with a single board. Remove this for a multi-node network
-  CAN.loopback();
-  ///////////EXAMPLE ONLY, DELETE ME FOR USE ON VEHICLE //////////
-
   /* Delays 
    *  This is starting the millsDelay from the library included by <millsDelay.h>
    *  This provides non-blocking delays that don't obstruct execution
