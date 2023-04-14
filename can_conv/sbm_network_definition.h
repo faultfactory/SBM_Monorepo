@@ -3,6 +3,11 @@
 #ifndef SBM_NETWORK_DEFINITION_H
 #define SBM_NETWORK_DEFINITION_H
 
+/* If the contents of this file have caused breaking changes for you, you could try using
+   an older version of the generator. You can specify this on the command line with
+   the -n option. */
+#define DBCC_GENERATOR_VERSION (3)
+
 #include <stdint.h>
 #include <stdio.h>
 
@@ -31,6 +36,17 @@ typedef enum {
 	DBCC_SIG_STAT_ERROR_E         = 2, /* Encode/Decode/Timestamp/Any error */
 } dbcc_signal_status_e;
 #endif
+
+#define CAN_ID_DRIVER_INPUTS (150) /* 0x96 */
+#define CAN_ID_REAR_WHEEL_SPEEDS (151) /* 0x97 */
+#define CAN_ID_FRONT_WHEEL_SPEEDS (152) /* 0x98 */
+#define CAN_ID_BRAKE_PRESSURES (153) /* 0x99 */
+#define CAN_ID_IMU (256) /* 0x100 */
+#define CAN_ID_GPS (257) /* 0x101 */
+#define CAN_ID_RAW_ACCEL_GYRO (258) /* 0x102 */
+#define CAN_ID_RAW_MAG (259) /* 0x103 */
+#define CAN_ID_CAN_LOGGER_END (260) /* 0x104 */
+#define CAN_ID_CAN_LOGGER_BEGIN (261) /* 0x105 */
 
 typedef PREPACK struct {
 	int16_t Steering_Input_deg; /* scaling 1.0, offset 0.0, units deg  */
@@ -81,6 +97,11 @@ Resolution of 0.1 degrees */
 } POSTPACK can_0x100_IMU_t;
 
 typedef PREPACK struct {
+	/* Body_Speed_mps: Velocity of the vehicle body in m/s
+
+Resolution of 0.1 m/s (0.224 mph) */
+	/* scaling 0.1, offset 0.0, units m/s  */
+	uint16_t Body_Speed_mps;
 	/* True_Yaw_deg: Yaw angle of the vehicle body in degrees
 
 Output is an integer to save space
@@ -88,11 +109,6 @@ Output is an integer to save space
 Resolution of 0.1 degrees */
 	/* scaling 0.1, offset 0.0, units deg  */
 	uint16_t True_Yaw_deg;
-	/* Body_Speed_mps: Velocity of the vehicle body in m/s
-
-Resolution of 0.1 m/s (0.224 mph) */
-	/* scaling 0.1, offset 0.0, units m/s  */
-	uint8_t Body_Speed_mps;
 } POSTPACK can_0x101_GPS_t;
 
 typedef PREPACK struct {
@@ -236,10 +252,10 @@ int decode_can_0x100_Body_Yaw_deg(const can_obj_sbm_network_definition_h_t *o, d
 int encode_can_0x100_Body_Yaw_deg(can_obj_sbm_network_definition_h_t *o, double in);
 
 
-int decode_can_0x101_True_Yaw_deg(const can_obj_sbm_network_definition_h_t *o, double *out);
-int encode_can_0x101_True_Yaw_deg(can_obj_sbm_network_definition_h_t *o, double in);
 int decode_can_0x101_Body_Speed_mps(const can_obj_sbm_network_definition_h_t *o, double *out);
 int encode_can_0x101_Body_Speed_mps(can_obj_sbm_network_definition_h_t *o, double in);
+int decode_can_0x101_True_Yaw_deg(const can_obj_sbm_network_definition_h_t *o, double *out);
+int encode_can_0x101_True_Yaw_deg(can_obj_sbm_network_definition_h_t *o, double in);
 
 
 int decode_can_0x102_Raw_Accel_x_mps2(const can_obj_sbm_network_definition_h_t *o, double *out);

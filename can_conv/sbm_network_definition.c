@@ -34,7 +34,7 @@ static int pack_can_0x096_Driver_Inputs(can_obj_sbm_network_definition_h_t *o, u
 	i |= x;
 	*data = (i);
 	o->can_0x096_Driver_Inputs_tx = 1;
-	return 0;
+	return 8;
 }
 
 static int unpack_can_0x096_Driver_Inputs(can_obj_sbm_network_definition_h_t *o, uint64_t data, uint8_t dlc, dbcc_time_stamp_t time_stamp) {
@@ -56,7 +56,7 @@ static int unpack_can_0x096_Driver_Inputs(can_obj_sbm_network_definition_h_t *o,
 	o->can_0x096_Driver_Inputs.Brake_Input_lbf = x;
 	o->can_0x096_Driver_Inputs_rx = 1;
 	o->can_0x096_Driver_Inputs_time_stamp_rx = time_stamp;
-	return 0;
+	return 8;
 }
 
 int decode_can_0x096_Steering_Input_deg(const can_obj_sbm_network_definition_h_t *o, int16_t *out) {
@@ -135,7 +135,7 @@ static int pack_can_0x097_Rear_Wheel_Speeds(can_obj_sbm_network_definition_h_t *
 	i |= x;
 	*data = (i);
 	o->can_0x097_Rear_Wheel_Speeds_tx = 1;
-	return 0;
+	return 8;
 }
 
 static int unpack_can_0x097_Rear_Wheel_Speeds(can_obj_sbm_network_definition_h_t *o, uint64_t data, uint8_t dlc, dbcc_time_stamp_t time_stamp) {
@@ -153,7 +153,7 @@ static int unpack_can_0x097_Rear_Wheel_Speeds(can_obj_sbm_network_definition_h_t
 	o->can_0x097_Rear_Wheel_Speeds.RR_Wheelspeed_rpm = x;
 	o->can_0x097_Rear_Wheel_Speeds_rx = 1;
 	o->can_0x097_Rear_Wheel_Speeds_time_stamp_rx = time_stamp;
-	return 0;
+	return 8;
 }
 
 int decode_can_0x097_RL_Wheelspeed_rpm(const can_obj_sbm_network_definition_h_t *o, double *out) {
@@ -227,7 +227,7 @@ static int pack_can_0x098_Front_Wheel_Speeds(can_obj_sbm_network_definition_h_t 
 	i |= x;
 	*data = (i);
 	o->can_0x098_Front_Wheel_Speeds_tx = 1;
-	return 0;
+	return 8;
 }
 
 static int unpack_can_0x098_Front_Wheel_Speeds(can_obj_sbm_network_definition_h_t *o, uint64_t data, uint8_t dlc, dbcc_time_stamp_t time_stamp) {
@@ -245,7 +245,7 @@ static int unpack_can_0x098_Front_Wheel_Speeds(can_obj_sbm_network_definition_h_
 	o->can_0x098_Front_Wheel_Speeds.FR_Wheelspeed_rpm = x;
 	o->can_0x098_Front_Wheel_Speeds_rx = 1;
 	o->can_0x098_Front_Wheel_Speeds_time_stamp_rx = time_stamp;
-	return 0;
+	return 8;
 }
 
 int decode_can_0x098_FL_Wheelspeed_rpm(const can_obj_sbm_network_definition_h_t *o, double *out) {
@@ -319,7 +319,7 @@ static int pack_can_0x099_Brake_Pressures(can_obj_sbm_network_definition_h_t *o,
 	i |= x;
 	*data = (i);
 	o->can_0x099_Brake_Pressures_tx = 1;
-	return 0;
+	return 8;
 }
 
 static int unpack_can_0x099_Brake_Pressures(can_obj_sbm_network_definition_h_t *o, uint64_t data, uint8_t dlc, dbcc_time_stamp_t time_stamp) {
@@ -337,7 +337,7 @@ static int unpack_can_0x099_Brake_Pressures(can_obj_sbm_network_definition_h_t *
 	o->can_0x099_Brake_Pressures.FR_Press_psi = x;
 	o->can_0x099_Brake_Pressures_rx = 1;
 	o->can_0x099_Brake_Pressures_time_stamp_rx = time_stamp;
-	return 0;
+	return 8;
 }
 
 int decode_can_0x099_FL_Press_psi(const can_obj_sbm_network_definition_h_t *o, double *out) {
@@ -419,7 +419,7 @@ static int pack_can_0x100_IMU(can_obj_sbm_network_definition_h_t *o, uint64_t *d
 	i |= x;
 	*data = (i);
 	o->can_0x100_IMU_tx = 1;
-	return 0;
+	return 8;
 }
 
 static int unpack_can_0x100_IMU(can_obj_sbm_network_definition_h_t *o, uint64_t data, uint8_t dlc, dbcc_time_stamp_t time_stamp) {
@@ -440,7 +440,7 @@ static int unpack_can_0x100_IMU(can_obj_sbm_network_definition_h_t *o, uint64_t 
 	o->can_0x100_IMU.Body_Yaw_deg = x;
 	o->can_0x100_IMU_rx = 1;
 	o->can_0x100_IMU_time_stamp_rx = time_stamp;
-	return 0;
+	return 8;
 }
 
 int decode_can_0x100_Body_Roll_deg(const can_obj_sbm_network_definition_h_t *o, double *out) {
@@ -530,16 +530,16 @@ static int pack_can_0x101_GPS(can_obj_sbm_network_definition_h_t *o, uint64_t *d
 	assert(data);
 	register uint64_t x;
 	register uint64_t i = 0;
-	/* True_Yaw_deg: start-bit 8, length 12, endianess intel, scaling 0.1, offset 0 */
-	x = ((uint16_t)(o->can_0x101_GPS.True_Yaw_deg)) & 0xfff;
-	x <<= 8; 
+	/* Body_Speed_mps: start-bit 0, length 16, endianess intel, scaling 0.1, offset 0 */
+	x = ((uint16_t)(o->can_0x101_GPS.Body_Speed_mps)) & 0xffff;
 	i |= x;
-	/* Body_Speed_mps: start-bit 0, length 8, endianess intel, scaling 0.1, offset 0 */
-	x = ((uint8_t)(o->can_0x101_GPS.Body_Speed_mps)) & 0xff;
+	/* True_Yaw_deg: start-bit 16, length 12, endianess intel, scaling 0.1, offset 0 */
+	x = ((uint16_t)(o->can_0x101_GPS.True_Yaw_deg)) & 0xfff;
+	x <<= 16; 
 	i |= x;
 	*data = (i);
 	o->can_0x101_GPS_tx = 1;
-	return 0;
+	return 8;
 }
 
 static int unpack_can_0x101_GPS(can_obj_sbm_network_definition_h_t *o, uint64_t data, uint8_t dlc, dbcc_time_stamp_t time_stamp) {
@@ -549,14 +549,38 @@ static int unpack_can_0x101_GPS(can_obj_sbm_network_definition_h_t *o, uint64_t 
 	register uint64_t i = (data);
 	if (dlc < 8)
 		return -1;
-	/* True_Yaw_deg: start-bit 8, length 12, endianess intel, scaling 0.1, offset 0 */
-	x = (i >> 8) & 0xfff;
-	o->can_0x101_GPS.True_Yaw_deg = x;
-	/* Body_Speed_mps: start-bit 0, length 8, endianess intel, scaling 0.1, offset 0 */
-	x = i & 0xff;
+	/* Body_Speed_mps: start-bit 0, length 16, endianess intel, scaling 0.1, offset 0 */
+	x = i & 0xffff;
 	o->can_0x101_GPS.Body_Speed_mps = x;
+	/* True_Yaw_deg: start-bit 16, length 12, endianess intel, scaling 0.1, offset 0 */
+	x = (i >> 16) & 0xfff;
+	o->can_0x101_GPS.True_Yaw_deg = x;
 	o->can_0x101_GPS_rx = 1;
 	o->can_0x101_GPS_time_stamp_rx = time_stamp;
+	return 8;
+}
+
+int decode_can_0x101_Body_Speed_mps(const can_obj_sbm_network_definition_h_t *o, double *out) {
+	assert(o);
+	assert(out);
+	double rval = (double)(o->can_0x101_GPS.Body_Speed_mps);
+	rval *= 0.1;
+	if (rval <= 6553.5) {
+		*out = rval;
+		return 0;
+	} else {
+		*out = (double)0;
+		return -1;
+	}
+}
+
+int encode_can_0x101_Body_Speed_mps(can_obj_sbm_network_definition_h_t *o, double in) {
+	assert(o);
+	o->can_0x101_GPS.Body_Speed_mps = 0;
+	if (in > 6553.5)
+		return -1;
+	in *= 10;
+	o->can_0x101_GPS.Body_Speed_mps = in;
 	return 0;
 }
 
@@ -584,36 +608,12 @@ int encode_can_0x101_True_Yaw_deg(can_obj_sbm_network_definition_h_t *o, double 
 	return 0;
 }
 
-int decode_can_0x101_Body_Speed_mps(const can_obj_sbm_network_definition_h_t *o, double *out) {
-	assert(o);
-	assert(out);
-	double rval = (double)(o->can_0x101_GPS.Body_Speed_mps);
-	rval *= 0.1;
-	if (rval <= 25.5) {
-		*out = rval;
-		return 0;
-	} else {
-		*out = (double)0;
-		return -1;
-	}
-}
-
-int encode_can_0x101_Body_Speed_mps(can_obj_sbm_network_definition_h_t *o, double in) {
-	assert(o);
-	o->can_0x101_GPS.Body_Speed_mps = 0;
-	if (in > 25.5)
-		return -1;
-	in *= 10;
-	o->can_0x101_GPS.Body_Speed_mps = in;
-	return 0;
-}
-
 int print_can_0x101_GPS(const can_obj_sbm_network_definition_h_t *o, FILE *output) {
 	assert(o);
 	assert(output);
 	int r = 0;
-	r = print_helper(r, fprintf(output, "True_Yaw_deg = (wire: %.0f)\n", (double)(o->can_0x101_GPS.True_Yaw_deg)));
 	r = print_helper(r, fprintf(output, "Body_Speed_mps = (wire: %.0f)\n", (double)(o->can_0x101_GPS.Body_Speed_mps)));
+	r = print_helper(r, fprintf(output, "True_Yaw_deg = (wire: %.0f)\n", (double)(o->can_0x101_GPS.True_Yaw_deg)));
 	return r;
 }
 
@@ -647,7 +647,7 @@ static int pack_can_0x102_RAW_Accel_Gyro(can_obj_sbm_network_definition_h_t *o, 
 	i |= x;
 	*data = (i);
 	o->can_0x102_RAW_Accel_Gyro_tx = 1;
-	return 0;
+	return 8;
 }
 
 static int unpack_can_0x102_RAW_Accel_Gyro(can_obj_sbm_network_definition_h_t *o, uint64_t data, uint8_t dlc, dbcc_time_stamp_t time_stamp) {
@@ -680,7 +680,7 @@ static int unpack_can_0x102_RAW_Accel_Gyro(can_obj_sbm_network_definition_h_t *o
 	o->can_0x102_RAW_Accel_Gyro.Raw_Gyro_z_rps = x;
 	o->can_0x102_RAW_Accel_Gyro_rx = 1;
 	o->can_0x102_RAW_Accel_Gyro_time_stamp_rx = time_stamp;
-	return 0;
+	return 8;
 }
 
 int decode_can_0x102_Raw_Accel_x_mps2(const can_obj_sbm_network_definition_h_t *o, double *out) {
@@ -870,7 +870,7 @@ static int pack_can_0x103_RAW_Mag(can_obj_sbm_network_definition_h_t *o, uint64_
 	i |= x;
 	*data = (i);
 	o->can_0x103_RAW_Mag_tx = 1;
-	return 0;
+	return 8;
 }
 
 static int unpack_can_0x103_RAW_Mag(can_obj_sbm_network_definition_h_t *o, uint64_t data, uint8_t dlc, dbcc_time_stamp_t time_stamp) {
@@ -891,7 +891,7 @@ static int unpack_can_0x103_RAW_Mag(can_obj_sbm_network_definition_h_t *o, uint6
 	o->can_0x103_RAW_Mag.Raw_Mag_z_uT = x;
 	o->can_0x103_RAW_Mag_rx = 1;
 	o->can_0x103_RAW_Mag_time_stamp_rx = time_stamp;
-	return 0;
+	return 8;
 }
 
 int decode_can_0x103_Raw_Mag_x_uT(const can_obj_sbm_network_definition_h_t *o, int8_t *out) {
@@ -956,7 +956,7 @@ static int pack_can_0x104_CAN_Logger_End(can_obj_sbm_network_definition_h_t *o, 
 	i |= x;
 	*data = (i);
 	o->can_0x104_CAN_Logger_End_tx = 1;
-	return 0;
+	return 8;
 }
 
 static int unpack_can_0x104_CAN_Logger_End(can_obj_sbm_network_definition_h_t *o, uint64_t data, uint8_t dlc, dbcc_time_stamp_t time_stamp) {
@@ -971,7 +971,7 @@ static int unpack_can_0x104_CAN_Logger_End(can_obj_sbm_network_definition_h_t *o
 	o->can_0x104_CAN_Logger_End.CAN_Logger = x;
 	o->can_0x104_CAN_Logger_End_rx = 1;
 	o->can_0x104_CAN_Logger_End_time_stamp_rx = time_stamp;
-	return 0;
+	return 8;
 }
 
 int decode_can_0x104_CAN_Logger(const can_obj_sbm_network_definition_h_t *o, uint8_t *out) {
@@ -1006,7 +1006,7 @@ static int pack_can_0x105_CAN_Logger_Begin(can_obj_sbm_network_definition_h_t *o
 	i |= x;
 	*data = (i);
 	o->can_0x105_CAN_Logger_Begin_tx = 1;
-	return 0;
+	return 8;
 }
 
 static int unpack_can_0x105_CAN_Logger_Begin(can_obj_sbm_network_definition_h_t *o, uint64_t data, uint8_t dlc, dbcc_time_stamp_t time_stamp) {
@@ -1021,7 +1021,7 @@ static int unpack_can_0x105_CAN_Logger_Begin(can_obj_sbm_network_definition_h_t 
 	o->can_0x105_CAN_Logger_Begin.CAN_Logger = x;
 	o->can_0x105_CAN_Logger_Begin_rx = 1;
 	o->can_0x105_CAN_Logger_Begin_time_stamp_rx = time_stamp;
-	return 0;
+	return 8;
 }
 
 int decode_can_0x105_CAN_Logger(const can_obj_sbm_network_definition_h_t *o, uint8_t *out) {
