@@ -110,6 +110,9 @@ void setup()
   pinMode(BUTTON_B, INPUT_PULLUP);
   pinMode(BUTTON_C, INPUT_PULLUP);
 
+  //DEBUG
+  digitalWrite(4, HIGH);
+
   /*******************************************************************************/
 
   // Initialize arrays to zero
