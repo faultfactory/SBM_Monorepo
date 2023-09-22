@@ -23,6 +23,8 @@ I'd like to eventually be transferring this to the ```stonybrookmotorsports``` g
 
 ### [Useful textbooks.](https://drive.google.com/drive/u/0/folders/1wXHaC0d-mO1E_1IGiEWTY10UFxmAqdf4)
 
+### [System Documentation (READ ME).](https://drive.google.com/file/d/1v0qhTgioZ07gIDk6WkC1Cv2NLdMiSrMt/view?usp=sharing)
+
 
 # ```TODOs```:
 - Since the .dbc is stored here, data conversion tools should be alongside it to reference it.
