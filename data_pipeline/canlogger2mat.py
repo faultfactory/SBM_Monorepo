@@ -31,11 +31,15 @@ if n == 1:
 
 if n>1:
     print("File path provided: " + sys.argv[1])
-    
+
 data_file_path = sys.argv[1]
 
-# grab the dbc file from the web and load it into to a string in local memory. 
-dbc_string = requests.get('https://raw.githubusercontent.com/faultfactory/SBM_Monorepo/main/dbc/sbm_network_definition.dbc').text
+if n>2:
+    print("Github hash provider: " + sys.argv[2])    
+    dbc_string = requests.get('https://raw.githubusercontent.com/faultfactory/SBM_Monorepo/' + sys.argv[2] + '/dbc/sbm_network_definition.dbc').text
+else: # grab the dbc file from the web and load it into to a string in local memory. 
+    dbc_string = requests.get('https://raw.githubusercontent.com/faultfactory/SBM_Monorepo/main/dbc/sbm_network_definition.dbc').text
+
 
 database = cantools.database.Database()
 database.add_dbc_string(dbc_string)
